@@ -1,0 +1,32 @@
+.app {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 2rem;
+}
+
+.app__placeholder {
+  width: min(100%, 36rem);
+  padding: 2rem;
+  border: 3px solid #111111;
+  background: #ffffff;
+  box-shadow: 8px 8px 0 #111111;
+  text-align: center;
+}
+
+.app__placeholder h1 {
+  margin: 0;
+  font-size: clamp(2rem, 8vw, 4rem);
+  line-height: 1;
+}
+
+.app__placeholder p {
+  margin: 1rem 0 0;
+}
+
+.app__eyebrow {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
