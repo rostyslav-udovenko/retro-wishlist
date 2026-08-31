@@ -11,10 +11,10 @@ function GiftCard({ gift }: GiftCardProps) {
   return (
     <article
       className={`gift-card gift-card--${gift.accent}`}
-      aria-labelledby={`gift-title-${gift.id}`}
+      aria-labelledby={`gift-title-${gift.key}`}
     >
       <div className="gift-card__visual" aria-hidden="true">
-        <span className="gift-card__icon">{gift.icon}</span>
+        <span className="gift-card__icon">{gift.image}</span>
       </div>
 
       <div className="gift-card__content">
@@ -34,7 +34,7 @@ function GiftCard({ gift }: GiftCardProps) {
           </span>
         </div>
 
-        <h2 id={`gift-title-${gift.id}`}>{gift.name}</h2>
+        <h2 id={`gift-title-${gift.key}`}>{gift.name}</h2>
 
         <p className="gift-card__description">{gift.description}</p>
 
