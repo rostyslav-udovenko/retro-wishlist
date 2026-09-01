@@ -11,5 +11,10 @@ export type Gift = {
   image: string;
   storeUrl: string | null;
   accent: GiftAccent;
+  displayOrder: number;
   isReserved: boolean;
 };
+
+export function isGiftAccent(value: unknown): value is GiftAccent {
+  return giftAccents.includes(value as GiftAccent);
+}
