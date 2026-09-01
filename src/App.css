@@ -362,6 +362,7 @@
   border-radius: 20% 70% 70% 20%;
   transform: rotate(-18deg);
 }
+
 .system-panel {
   display: grid;
   grid-template-columns: minmax(180px, 0.45fr) minmax(0, 1fr);
@@ -460,6 +461,7 @@
   font-weight: 900;
   text-transform: uppercase;
 }
+
 .gift-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -562,6 +564,7 @@
   font-size: 0.92rem;
   line-height: 1.5;
 }
+
 .gift-card__footer {
   display: flex;
   align-items: end;
@@ -629,6 +632,178 @@
   font-weight: 900;
   text-transform: uppercase;
 }
+
+.page-state {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 680px);
+  padding: clamp(2rem, 6vw, 4rem);
+  border: 4px solid var(--black);
+  background: var(--white);
+  box-shadow: 14px 14px 0 var(--black);
+  text-align: center;
+}
+
+.page-state--loading {
+  background: var(--yellow);
+}
+
+.page-state--error {
+  background: var(--pink);
+}
+
+.page-state--not-found {
+  background: var(--cyan);
+}
+
+.page-state__icon {
+  display: grid;
+  width: 6rem;
+  margin: 0 auto 1.5rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 4px solid var(--black);
+  background: var(--white);
+  box-shadow: 7px 7px 0 var(--black);
+  font-size: 3rem;
+  transform: rotate(-4deg);
+}
+
+.page-state__eyebrow {
+  display: inline-block;
+  margin: 0 0 1rem;
+  padding: 0.4rem 0.7rem;
+  border: 3px solid var(--black);
+  background: var(--white);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-state h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 1000;
+  letter-spacing: -0.065em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.page-state > p:last-of-type {
+  max-width: 500px;
+  margin: 1.5rem auto 0;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.page-state__button,
+.inline-error button {
+  min-height: 2.8rem;
+  padding: 0.65rem 1rem;
+  border: 3px solid var(--black);
+  border-radius: 0;
+  background: var(--yellow);
+  box-shadow: 4px 4px 0 var(--black);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    box-shadow 120ms ease,
+    transform 120ms ease;
+}
+
+.page-state__button {
+  margin-top: 1.5rem;
+}
+
+.page-state__button:hover,
+.inline-error button:hover {
+  box-shadow: 2px 2px 0 var(--black);
+  transform: translate(2px, 2px);
+}
+
+.page-state__button:active,
+.inline-error button:active {
+  box-shadow: none;
+  transform: translate(4px, 4px);
+}
+
+.page-state__button:focus-visible,
+.inline-error button:focus-visible {
+  outline: 4px solid var(--purple);
+  outline-offset: 4px;
+}
+
+.inline-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 4px solid var(--black);
+  background: var(--pink);
+  box-shadow: 6px 6px 0 var(--black);
+}
+
+.inline-error div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.inline-error strong {
+  font-family: "Courier New", Courier, monospace;
+  text-transform: uppercase;
+}
+
+.inline-error span {
+  line-height: 1.4;
+}
+
+.inline-error button {
+  flex-shrink: 0;
+  background: var(--white);
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 4px dashed var(--black);
+  background: var(--yellow);
+}
+
+.empty-state > span {
+  display: grid;
+  width: 5rem;
+  flex: 0 0 auto;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 4px solid var(--black);
+  background: var(--white);
+  box-shadow: 6px 6px 0 var(--black);
+  font-size: 2.5rem;
+}
+
+.empty-state h3 {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.empty-state p {
+  margin: 0.5rem 0 0;
+  line-height: 1.5;
+}
+
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;
@@ -765,6 +940,32 @@
 
   .window-footer {
     align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-state {
+    width: calc(100% - 2rem);
+    margin: 1rem;
+    padding: 2rem 1.25rem;
+    box-shadow: 7px 7px 0 var(--black);
+  }
+
+  .page-state__icon {
+    width: 5rem;
+    font-size: 2.5rem;
+  }
+
+  .inline-error {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .inline-error button {
+    width: 100%;
+  }
+
+  .empty-state {
+    align-items: stretch;
     flex-direction: column;
   }
 }
