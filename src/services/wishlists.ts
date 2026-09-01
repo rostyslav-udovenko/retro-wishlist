@@ -24,6 +24,27 @@ type GiftRow = {
   is_reserved: boolean;
 };
 
+export type ReserveGiftInput = {
+  wishlistSlug: string;
+  giftId: number;
+  guestName: string;
+  visitorToken: string;
+};
+
+export type ReleaseGiftInput = {
+  wishlistSlug: string;
+  giftId: number;
+  visitorToken: string;
+};
+
+function normalizeWishlistSlug(slug: string): string {
+  return slug.trim().toLowerCase();
+}
+
+function normalizeGuestName(name: string): string {
+  return name.trim().replace(/\s+/g, " ");
+}
+
 function isWishlistVisibility(value: unknown): value is WishlistVisibility {
   return value === "public" || value === "unlisted";
 }
@@ -63,10 +84,8 @@ function mapGift(row: GiftRow): Gift {
 }
 
 export async function fetchWishlist(slug: string): Promise<Wishlist | null> {
-  const normalizedSlug = slug.trim().toLowerCase();
-
   const { data, error } = await supabase.rpc("get_wishlist", {
-    p_wishlist_slug: normalizedSlug,
+    p_wishlist_slug: normalizeWishlistSlug(slug),
   });
 
   if (error) {
@@ -83,10 +102,8 @@ export async function fetchWishlist(slug: string): Promise<Wishlist | null> {
 }
 
 export async function fetchWishlistGifts(slug: string): Promise<Gift[]> {
-  const normalizedSlug = slug.trim().toLowerCase();
-
   const { data, error } = await supabase.rpc("get_wishlist_gifts", {
-    p_wishlist_slug: normalizedSlug,
+    p_wishlist_slug: normalizeWishlistSlug(slug),
   });
 
   if (error) {
@@ -118,4 +135,48 @@ export async function fetchWishlistPage(slug: string): Promise<{
     wishlist,
     gifts,
   };
+}
+
+export async function reserveGift({
+  wishlistSlug,
+  giftId,
+  guestName,
+  visitorToken,
+}: ReserveGiftInput): Promise<boolean> {
+  const normalizedGuestName = normalizeGuestName(guestName);
+
+  if (normalizedGuestName.length < 2 || normalizedGuestName.length > 50) {
+    throw new Error("Your name must contain between 2 and 50 characters.");
+  }
+
+  const { data, error } = await supabase.rpc("reserve_gift", {
+    p_wishlist_slug: normalizeWishlistSlug(wishlistSlug),
+    p_gift_id: giftId,
+    p_guest_name: normalizedGuestName,
+    p_visitor_token: visitorToken,
+  });
+
+  if (error) {
+    throw new Error(`Unable to reserve gift: ${error.message}`);
+  }
+
+  return data === true;
+}
+
+export async function releaseGift({
+  wishlistSlug,
+  giftId,
+  visitorToken,
+}: ReleaseGiftInput): Promise<boolean> {
+  const { data, error } = await supabase.rpc("release_gift", {
+    p_wishlist_slug: normalizeWishlistSlug(wishlistSlug),
+    p_gift_id: giftId,
+    p_visitor_token: visitorToken,
+  });
+
+  if (error) {
+    throw new Error(`Unable to release gift: ${error.message}`);
+  }
+
+  return data === true;
 }
