@@ -543,6 +543,19 @@
   background: var(--gray);
 }
 
+.gift-card__status--owned {
+  background: var(--yellow);
+}
+
+.gift-card--owned {
+  outline: 4px solid var(--purple);
+  outline-offset: -8px;
+}
+
+.retro-button--release {
+  background: var(--yellow);
+}
+
 .gift-card__number {
   color: rgb(17 17 17 / 55%);
   font-family: "Courier New", Courier, monospace;
@@ -804,6 +817,324 @@
   line-height: 1.5;
 }
 
+.dialog-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  padding: 1.5rem;
+  background: rgb(17 17 17 / 72%);
+  backdrop-filter: blur(3px);
+}
+
+.reservation-dialog {
+  width: min(100%, 620px);
+  overflow: hidden;
+  border: 4px solid var(--black);
+  background: var(--white);
+  box-shadow: 14px 14px 0 var(--black);
+}
+
+.reservation-dialog__title-bar {
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0.8rem;
+  border-bottom: 4px solid var(--black);
+  background: linear-gradient(
+    90deg,
+    var(--hot-pink) 0 35%,
+    var(--yellow) 35% 68%,
+    var(--cyan) 68% 100%
+  );
+}
+
+.reservation-dialog__identity {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+
+.reservation-dialog__identity > span {
+  display: grid;
+  width: 2rem;
+  flex: 0 0 auto;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 3px solid var(--black);
+  background: var(--white);
+  box-shadow: 3px 3px 0 var(--black);
+}
+
+.reservation-dialog__identity strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reservation-dialog__close {
+  display: grid;
+  width: 2rem;
+  flex: 0 0 auto;
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 0;
+  border: 3px solid var(--black);
+  border-radius: 0;
+  background: var(--pink);
+  box-shadow: 3px 3px 0 var(--black);
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.reservation-dialog__close:hover:not(:disabled) {
+  box-shadow: 1px 1px 0 var(--black);
+  transform: translate(2px, 2px);
+}
+
+.reservation-dialog__close:focus-visible {
+  outline: 4px solid var(--purple);
+  outline-offset: 3px;
+}
+
+.reservation-dialog__close:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.reservation-dialog__form {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  background: radial-gradient(var(--black) 1px, transparent 1px), #fffdf5;
+  background-size: 16px 16px;
+}
+
+.reservation-dialog__gift {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 4px solid var(--black);
+  box-shadow: 6px 6px 0 var(--black);
+}
+
+.reservation-dialog__gift--blue {
+  background: var(--blue);
+}
+
+.reservation-dialog__gift--pink {
+  background: var(--hot-pink);
+}
+
+.reservation-dialog__gift--yellow {
+  background: var(--yellow);
+}
+
+.reservation-dialog__gift-icon {
+  display: grid;
+  width: 5rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 4px solid var(--black);
+  background: var(--white);
+  box-shadow: 5px 5px 0 var(--black);
+  font-size: 2.6rem;
+  transform: rotate(-3deg);
+}
+
+.reservation-dialog__gift p {
+  margin: 0 0 0.25rem;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.reservation-dialog__gift h2 {
+  margin: 0;
+  font-size: clamp(1.4rem, 4vw, 2.15rem);
+  font-weight: 1000;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.reservation-dialog__gift div > span {
+  display: block;
+  margin-top: 0.55rem;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.reservation-dialog__description {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 3px solid var(--black);
+  background: var(--white);
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.reservation-dialog__field {
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.reservation-dialog__field label {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.reservation-dialog__field input {
+  width: 100%;
+  min-height: 3.35rem;
+  padding: 0.75rem 4.5rem 0.75rem 0.9rem;
+  border: 4px solid var(--black);
+  border-radius: 0;
+  background: var(--white);
+  color: var(--black);
+  box-shadow: 5px 5px 0 var(--black);
+  font-size: 1rem;
+  font-weight: 700;
+  outline: none;
+}
+
+.reservation-dialog__field input::placeholder {
+  color: rgb(17 17 17 / 48%);
+}
+
+.reservation-dialog__field input:focus {
+  border-color: var(--purple);
+  box-shadow: 5px 5px 0 var(--purple);
+}
+
+.reservation-dialog__field input[aria-invalid="true"] {
+  border-color: #b91c1c;
+  background: #fff1f2;
+  box-shadow: 5px 5px 0 #b91c1c;
+}
+
+.reservation-dialog__field input:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.reservation-dialog__counter {
+  position: absolute;
+  right: 0.85rem;
+  top: 2.55rem;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
+.reservation-dialog__error {
+  margin: 0.2rem 0 0;
+  color: #991b1b;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.reservation-dialog__submit-error {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.9rem 1rem;
+  border: 4px solid var(--black);
+  background: var(--pink);
+  box-shadow: 5px 5px 0 var(--black);
+}
+
+.reservation-dialog__submit-error strong {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.reservation-dialog__submit-error span {
+  line-height: 1.45;
+}
+
+.reservation-dialog__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.9rem;
+}
+
+.reservation-dialog__submit,
+.reservation-dialog__cancel {
+  min-height: 3rem;
+  padding: 0.7rem 1rem;
+  border: 3px solid var(--black);
+  border-radius: 0;
+  box-shadow: 5px 5px 0 var(--black);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.reservation-dialog__submit {
+  background: var(--mint);
+}
+
+.reservation-dialog__cancel {
+  background: var(--white);
+}
+
+.reservation-dialog__submit:hover:not(:disabled),
+.reservation-dialog__cancel:hover:not(:disabled) {
+  box-shadow: 2px 2px 0 var(--black);
+  transform: translate(3px, 3px);
+}
+
+.reservation-dialog__submit:active:not(:disabled),
+.reservation-dialog__cancel:active:not(:disabled) {
+  box-shadow: none;
+  transform: translate(5px, 5px);
+}
+
+.reservation-dialog__submit:focus-visible,
+.reservation-dialog__cancel:focus-visible {
+  outline: 4px solid var(--purple);
+  outline-offset: 4px;
+}
+
+.reservation-dialog__submit:disabled,
+.reservation-dialog__cancel:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.reservation-dialog__privacy {
+  margin: 0;
+  padding-top: 0.9rem;
+  border-top: 3px dashed var(--black);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;
@@ -967,6 +1298,39 @@
   .empty-state {
     align-items: stretch;
     flex-direction: column;
+  }
+
+    .dialog-backdrop {
+    align-items: start;
+    padding: 1rem;
+  }
+
+  .reservation-dialog {
+    margin: 1rem 0;
+    box-shadow: 7px 7px 0 var(--black);
+  }
+
+  .reservation-dialog__form {
+    padding: 1rem;
+  }
+
+  .reservation-dialog__gift {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .reservation-dialog__gift-icon {
+    width: 4.5rem;
+    margin: 0 auto;
+  }
+
+  .reservation-dialog__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .reservation-dialog__submit,
+  .reservation-dialog__cancel {
+    width: 100%;
   }
 }
 
