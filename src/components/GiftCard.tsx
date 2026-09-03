@@ -2,15 +2,55 @@ import type { Gift } from "../types/gift";
 
 type GiftCardProps = {
   gift: Gift;
+  isOwnedByVisitor: boolean;
+  isUpdating: boolean;
+  onChooseGift: (gift: Gift) => void;
+  onReleaseGift: (giftId: number) => void;
 };
 
-function GiftCard({ gift }: GiftCardProps) {
-  const statusLabel = gift.isReserved ? "Already chosen" : "Available";
-  const buttonLabel = gift.isReserved ? "Already chosen" : "Choose this gift";
+function GiftCard({
+  gift,
+  isOwnedByVisitor,
+  isUpdating,
+  onChooseGift,
+  onReleaseGift,
+}: GiftCardProps) {
+  const canRelease = gift.isReserved && isOwnedByVisitor;
+
+  let statusLabel = "Available";
+  let buttonLabel = "Choose this gift";
+
+  if (isUpdating) {
+    statusLabel = gift.isReserved ? "Releasing..." : "Reserving...";
+    buttonLabel = statusLabel;
+  } else if (canRelease) {
+    statusLabel = "Reserved by you";
+    buttonLabel = "Release my reservation";
+  } else if (gift.isReserved) {
+    statusLabel = "Already chosen";
+    buttonLabel = "Already chosen";
+  }
+
+  function handleAction() {
+    if (isUpdating) {
+      return;
+    }
+
+    if (canRelease) {
+      onReleaseGift(gift.id);
+      return;
+    }
+
+    if (!gift.isReserved) {
+      onChooseGift(gift);
+    }
+  }
 
   return (
     <article
-      className={`gift-card gift-card--${gift.accent}`}
+      className={`gift-card gift-card--${gift.accent} ${
+        canRelease ? "gift-card--owned" : ""
+      }`}
       aria-labelledby={`gift-title-${gift.key}`}
     >
       <div className="gift-card__visual" aria-hidden="true">
@@ -21,9 +61,11 @@ function GiftCard({ gift }: GiftCardProps) {
         <div className="gift-card__status-row">
           <span
             className={`gift-card__status ${
-              gift.isReserved
-                ? "gift-card__status--reserved"
-                : "gift-card__status--available"
+              canRelease
+                ? "gift-card__status--owned"
+                : gift.isReserved
+                  ? "gift-card__status--reserved"
+                  : "gift-card__status--available"
             }`}
           >
             {statusLabel}
@@ -42,9 +84,13 @@ function GiftCard({ gift }: GiftCardProps) {
           <span className="gift-card__price">{gift.price}</span>
 
           <button
-            className="retro-button"
+            className={`retro-button ${
+              canRelease ? "retro-button--release" : ""
+            }`}
             type="button"
-            disabled={gift.isReserved}
+            disabled={isUpdating || (gift.isReserved && !isOwnedByVisitor)}
+            aria-busy={isUpdating || undefined}
+            onClick={handleAction}
           >
             {buttonLabel}
           </button>
