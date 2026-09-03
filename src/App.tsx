@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import GiftCard from "./components/GiftCard";
 import ReservationDialog from "./components/ReservationDialog";
+import { useWishlistSync } from "./hooks/use-wishlist-sync";
+import { broadcastWishlistChange } from "./services/wishlist-realtime";
 import {
   fetchWishlistPage,
   releaseGift,
@@ -39,6 +41,17 @@ function getErrorMessage(error: unknown): string {
   return error instanceof Error
     ? error.message
     : "An unexpected error occurred while loading the wishlist.";
+}
+
+async function notifyWishlistChanged(): Promise<void> {
+  try {
+    await broadcastWishlistChange(wishlistSlug);
+  } catch (error) {
+    console.warn(
+      "The wishlist was updated, but the Realtime notification failed.",
+      error,
+    );
+  }
 }
 
 function App() {
@@ -139,6 +152,12 @@ function App() {
     };
   }, []);
 
+  useWishlistSync({
+    wishlistSlug,
+    enabled: pageState.wishlist !== null,
+    onRefresh: reloadWishlist,
+  });
+
   const closeReservationDialog = useCallback(() => {
     if (updatingGiftId !== null) {
       return;
@@ -185,6 +204,8 @@ function App() {
         applyWishlistResult(result);
         return;
       }
+
+      await notifyWishlistChanged();
 
       const nextReservationIds = addReservationOwnership(wishlistSlug, giftId);
 
@@ -234,6 +255,8 @@ function App() {
         }));
         return;
       }
+
+      await notifyWishlistChanged();
 
       const nextReservationIds = removeReservationOwnership(
         wishlistSlug,
