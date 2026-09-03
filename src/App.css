@@ -763,6 +763,14 @@
   box-shadow: 6px 6px 0 var(--black);
 }
 
+.page-state__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--black);
+  text-decoration: none;
+}
+
 .inline-error div {
   display: flex;
   min-width: 0;
