@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 
+import AboutDialog from "../components/AboutDialog";
 import GiftCard from "../components/GiftCard";
 import ReservationDialog from "../components/ReservationDialog";
 import { useWishlistSync } from "../hooks/use-wishlist-sync";
@@ -62,6 +63,7 @@ function WishlistPage() {
   const [selectedGift, setSelectedGift] = useState<Gift | null>(null);
   const [updatingGiftId, setUpdatingGiftId] = useState<number | null>(null);
   const [reservationError, setReservationError] = useState<string | null>(null);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const applyWishlistResult = useCallback(
     (result: Awaited<ReturnType<typeof fetchWishlistPage>>) => {
@@ -69,12 +71,9 @@ function WishlistPage() {
         .filter((gift) => gift.isReserved)
         .map((gift) => gift.id);
 
-      const nextReservationIds = reconcileReservationOwnership(
-        wishlistSlug,
-        reservedGiftIds,
+      setReservationIds(
+        reconcileReservationOwnership(wishlistSlug, reservedGiftIds),
       );
-
-      setReservationIds(nextReservationIds);
       setPageState({
         wishlist: result.wishlist,
         gifts: result.gifts,
@@ -95,8 +94,7 @@ function WishlistPage() {
     }));
 
     try {
-      const result = await fetchWishlistPage(wishlistSlug);
-      applyWishlistResult(result);
+      applyWishlistResult(await fetchWishlistPage(wishlistSlug));
     } catch (error) {
       setPageState((currentState) => ({
         ...currentState,
@@ -120,12 +118,9 @@ function WishlistPage() {
           .filter((gift) => gift.isReserved)
           .map((gift) => gift.id);
 
-        const nextReservationIds = reconcileReservationOwnership(
-          wishlistSlug,
-          reservedGiftIds,
+        setReservationIds(
+          reconcileReservationOwnership(wishlistSlug, reservedGiftIds),
         );
-
-        setReservationIds(nextReservationIds);
         setPageState({
           wishlist: result.wishlist,
           gifts: result.gifts,
@@ -189,8 +184,7 @@ function WishlistPage() {
         setReservationError(
           "This gift has just been chosen by another visitor. The wishlist has been refreshed.",
         );
-        const result = await fetchWishlistPage(wishlistSlug);
-        applyWishlistResult(result);
+        applyWishlistResult(await fetchWishlistPage(wishlistSlug));
         return;
       }
 
@@ -320,7 +314,13 @@ function WishlistPage() {
           <a className="menu-bar__link" href="#gift-section-title">
             Gifts
           </a>
-          <span className="menu-bar__item">Help</span>
+          <button
+            className="menu-bar__link menu-bar__button"
+            type="button"
+            onClick={() => setIsAboutOpen(true)}
+          >
+            Help
+          </button>
           <span className="menu-bar__status">
             {isLoading ? "SYNCING" : "ONLINE"}
           </span>
@@ -399,6 +399,7 @@ function WishlistPage() {
                 {gifts.length} {gifts.length === 1 ? "item" : "items"} found
               </span>
             </div>
+
             {gifts.length > 0 ? (
               <div className="gift-grid">
                 {gifts.map((gift) => (
@@ -437,6 +438,7 @@ function WishlistPage() {
       <div className="desktop__decoration desktop__decoration--circle" />
       <div className="desktop__decoration desktop__decoration--triangle" />
       {pageContent}
+
       {selectedGift ? (
         <ReservationDialog
           gift={selectedGift}
@@ -445,6 +447,10 @@ function WishlistPage() {
           onCancel={closeReservationDialog}
           onConfirm={(guestName) => void handleConfirmReservation(guestName)}
         />
+      ) : null}
+
+      {isAboutOpen ? (
+        <AboutDialog onClose={() => setIsAboutOpen(false)} />
       ) : null}
     </main>
   );

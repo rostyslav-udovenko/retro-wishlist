@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import AboutDialog from "../components/AboutDialog";
 import WishlistDirectoryCard from "../components/WishlistDirectoryCard";
 import { fetchFeaturedWishlists } from "../services/wishlist-directory";
 import type { WishlistDirectoryItem } from "../types/wishlist-directory";
@@ -26,6 +27,7 @@ function HomePage() {
   const [directoryState, setDirectoryState] = useState<DirectoryState>(
     initialDirectoryState,
   );
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   useEffect(() => {
     let isCancelled = false;
@@ -171,9 +173,17 @@ function HomePage() {
         </header>
 
         <nav className="menu-bar" aria-label="Application menu">
-          <span>File</span>
-          <span>Wishlists</span>
-          <span>Help</span>
+          <a className="menu-bar__link" href="#wishlist-list-title">
+            Wishlists
+          </a>
+
+          <button
+            className="menu-bar__link menu-bar__button"
+            type="button"
+            onClick={() => setIsAboutOpen(true)}
+          >
+            Help
+          </button>
 
           <span className="menu-bar__status">ONLINE</span>
         </nav>
@@ -259,6 +269,10 @@ function HomePage() {
           <span>Rostyslav Udovenko © 2026</span>
         </footer>
       </section>
+
+      {isAboutOpen ? (
+        <AboutDialog onClose={() => setIsAboutOpen(false)} />
+      ) : null}
     </main>
   );
 }
