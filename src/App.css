@@ -1143,6 +1143,318 @@
   text-transform: uppercase;
 }
 
+.directory-window {
+  width: min(100%, 1180px);
+}
+
+.directory-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(250px, 0.65fr);
+  overflow: hidden;
+  border: 4px solid var(--black);
+  background: var(--yellow);
+  box-shadow: 9px 9px 0 var(--black);
+}
+
+.directory-hero__copy {
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.directory-hero h1 {
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 1000;
+  letter-spacing: -0.08em;
+  line-height: 0.82;
+  text-transform: uppercase;
+}
+
+.directory-hero h1 span {
+  display: block;
+  margin-top: 0.15em;
+  color: var(--purple);
+  text-shadow: 4px 4px 0 var(--white);
+}
+
+.directory-hero__copy > p:last-child {
+  max-width: 650px;
+  margin: 1.6rem 0 0;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.directory-hero__art {
+  position: relative;
+  display: grid;
+  min-height: 360px;
+  place-items: center;
+  overflow: hidden;
+  border-left: 4px solid var(--black);
+  background:
+    linear-gradient(
+      45deg,
+      var(--hot-pink) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--hot-pink) 75%
+    ),
+    linear-gradient(
+      45deg,
+      var(--hot-pink) 25%,
+      var(--cyan) 25%,
+      var(--cyan) 75%,
+      var(--hot-pink) 75%
+    );
+  background-position:
+    0 0,
+    20px 20px;
+  background-size: 40px 40px;
+}
+
+.directory-hero__primary-icon {
+  display: grid;
+  width: clamp(8rem, 15vw, 12rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 5px solid var(--black);
+  background: var(--white);
+  box-shadow: 10px 10px 0 var(--black);
+  font-size: clamp(4rem, 9vw, 7rem);
+  transform: rotate(-5deg);
+}
+
+.directory-hero__spark {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  font-weight: 1000;
+}
+
+.directory-hero__spark--one {
+  top: 1rem;
+  left: 1rem;
+  width: 4.5rem;
+  aspect-ratio: 1;
+  border: 4px solid var(--black);
+  background: var(--yellow);
+  box-shadow: 5px 5px 0 var(--black);
+  font-size: 2rem;
+  transform: rotate(-10deg);
+}
+
+.directory-hero__spark--two {
+  right: 1rem;
+  bottom: 1rem;
+  width: 5rem;
+  aspect-ratio: 1;
+  border: 4px solid var(--black);
+  background: var(--mint);
+  box-shadow: 5px 5px 0 var(--black);
+  font-size: 2.5rem;
+  transform: rotate(8deg);
+}
+
+.directory-hero__spark--three {
+  top: 1.25rem;
+  right: 1.25rem;
+  color: var(--purple);
+  font-size: 3rem;
+  text-shadow: 3px 3px 0 var(--white);
+}
+
+.directory-section {
+  margin-top: 3rem;
+}
+
+.directory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem;
+}
+
+.directory-card {
+  --directory-accent: var(--blue);
+
+  display: grid;
+  grid-template-columns: minmax(130px, 0.35fr) minmax(0, 1fr);
+  min-height: 350px;
+  overflow: hidden;
+  border: 4px solid var(--black);
+  background: var(--white);
+  box-shadow: 8px 8px 0 var(--black);
+}
+
+.directory-card--blue {
+  --directory-accent: var(--blue);
+}
+
+.directory-card--pink {
+  --directory-accent: var(--hot-pink);
+}
+
+.directory-card--yellow {
+  --directory-accent: var(--yellow);
+}
+
+.directory-card__visual {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  border-right: 4px solid var(--black);
+  background:
+    radial-gradient(var(--black) 1.5px, transparent 1.5px),
+    var(--directory-accent);
+  background-size: 15px 15px;
+}
+
+.directory-card__visual > span {
+  display: grid;
+  width: clamp(5rem, 10vw, 7.5rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 4px solid var(--black);
+  background: var(--white);
+  box-shadow: 7px 7px 0 var(--black);
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  transform: rotate(-4deg);
+}
+
+.directory-card__content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 1.25rem;
+}
+
+.directory-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.directory-card__header p {
+  margin: 0 0 0.35rem;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.directory-card__header h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  font-weight: 1000;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.directory-card__number {
+  color: rgb(17 17 17 / 55%);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.directory-card > .directory-card__content > h3 {
+  margin: 1rem 0 0;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.directory-card__description {
+  margin: 0.7rem 0 1.15rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.directory-card__statistics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: auto 0 1.25rem;
+  border: 3px solid var(--black);
+}
+
+.directory-card__statistics div {
+  min-width: 0;
+  padding: 0.6rem 0.35rem;
+  text-align: center;
+}
+
+.directory-card__statistics div + div {
+  border-left: 3px solid var(--black);
+}
+
+.directory-card__statistics dt {
+  overflow: hidden;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.58rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.directory-card__statistics dd {
+  margin: 0.2rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 1000;
+  line-height: 1;
+}
+
+.directory-card__statistics div:nth-child(1) {
+  background: var(--white);
+}
+
+.directory-card__statistics div:nth-child(2) {
+  background: var(--mint);
+}
+
+.directory-card__statistics div:nth-child(3) {
+  background: var(--gray);
+}
+
+.directory-card__link {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1rem;
+  border: 3px solid var(--black);
+  background: var(--directory-accent);
+  box-shadow: 5px 5px 0 var(--black);
+  color: var(--black);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    box-shadow 120ms ease,
+    transform 120ms ease;
+}
+
+.directory-card__link:hover {
+  box-shadow: 2px 2px 0 var(--black);
+  transform: translate(3px, 3px);
+}
+
+.directory-card__link:active {
+  box-shadow: none;
+  transform: translate(5px, 5px);
+}
+
+.directory-card__link:focus-visible {
+  outline: 4px solid var(--purple);
+  outline-offset: 4px;
+}
+
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;
@@ -1165,6 +1477,20 @@
   .system-panel__heading {
     border-right: 0;
     border-bottom: 4px solid var(--black);
+  }
+
+  .directory-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .directory-hero__art {
+    min-height: 300px;
+    border-top: 4px solid var(--black);
+    border-left: 0;
+  }
+
+  .directory-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1308,7 +1634,7 @@
     flex-direction: column;
   }
 
-    .dialog-backdrop {
+  .dialog-backdrop {
     align-items: start;
     padding: 1rem;
   }
@@ -1339,6 +1665,68 @@
   .reservation-dialog__submit,
   .reservation-dialog__cancel {
     width: 100%;
+  }
+
+  .directory-hero {
+    box-shadow: 6px 6px 0 var(--black);
+  }
+
+  .directory-hero__copy {
+    padding: 1.35rem;
+  }
+
+  .directory-hero h1 {
+    font-size: clamp(2.8rem, 15vw, 4.75rem);
+  }
+
+  .directory-hero__art {
+    min-height: 250px;
+  }
+
+  .directory-hero__primary-icon {
+    width: 8rem;
+    font-size: 4.5rem;
+  }
+
+  .directory-hero__spark--one {
+    width: 3.5rem;
+    font-size: 1.5rem;
+  }
+
+  .directory-hero__spark--two {
+    width: 4rem;
+    font-size: 2rem;
+  }
+
+  .directory-card {
+    grid-template-columns: 1fr;
+  }
+
+  .directory-card__visual {
+    min-height: 190px;
+    border-right: 0;
+    border-bottom: 4px solid var(--black);
+  }
+
+  .directory-card__statistics {
+    grid-template-columns: 1fr;
+  }
+
+  .directory-card__statistics div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.75rem;
+    text-align: left;
+  }
+
+  .directory-card__statistics div + div {
+    border-top: 3px solid var(--black);
+    border-left: 0;
+  }
+
+  .directory-card__statistics dd {
+    margin: 0;
   }
 }
 
