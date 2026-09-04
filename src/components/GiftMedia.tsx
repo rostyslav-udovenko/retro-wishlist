@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type GiftMediaProps = {
   image: string;
@@ -15,12 +15,9 @@ function isImageUrl(value: string): boolean {
 
 function GiftMedia({ image, giftName }: GiftMediaProps) {
   const [failedImage, setFailedImage] = useState<string | null>(null);
+
   const isRemoteImage = isImageUrl(image);
   const hasImageError = failedImage === image;
-
-  useEffect(() => {
-    setFailedImage(null);
-  }, [image]);
 
   if (isRemoteImage && !hasImageError) {
     return (
@@ -31,20 +28,28 @@ function GiftMedia({ image, giftName }: GiftMediaProps) {
         loading="lazy"
         decoding="async"
         referrerPolicy="no-referrer"
-        onError={() => setFailedImage(image)}
+        onError={() => {
+          setFailedImage(image);
+        }}
       />
     );
   }
 
+  if (hasImageError) {
+    return (
+      <span
+        className="gift-card__icon"
+        role="img"
+        aria-label={`Image unavailable for ${giftName}`}
+      >
+        🎁
+      </span>
+    );
+  }
+
   return (
-    <span
-      className="gift-card__icon"
-      aria-label={
-        hasImageError ? `Image unavailable for ${giftName}` : undefined
-      }
-      aria-hidden={hasImageError ? undefined : true}
-    >
-      {hasImageError ? "🎁" : image}
+    <span className="gift-card__icon" aria-hidden="true">
+      {image}
     </span>
   );
 }

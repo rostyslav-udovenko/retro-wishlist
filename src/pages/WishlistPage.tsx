@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 
 import GiftCard from "../components/GiftCard";
 import ReservationDialog from "../components/ReservationDialog";
@@ -86,9 +86,7 @@ function WishlistPage() {
   );
 
   const reloadWishlist = useCallback(async () => {
-    if (!wishlistSlug) {
-      return;
-    }
+    if (!wishlistSlug) return;
 
     setPageState((currentState) => ({
       ...currentState,
@@ -112,16 +110,11 @@ function WishlistPage() {
     let isCancelled = false;
 
     async function loadInitialWishlist() {
-      if (!wishlistSlug) {
-        return;
-      }
+      if (!wishlistSlug) return;
 
       try {
         const result = await fetchWishlistPage(wishlistSlug);
-
-        if (isCancelled) {
-          return;
-        }
+        if (isCancelled) return;
 
         const reservedGiftIds = result.gifts
           .filter((gift) => gift.isReserved)
@@ -140,9 +133,7 @@ function WishlistPage() {
           error: null,
         });
       } catch (error) {
-        if (isCancelled) {
-          return;
-        }
+        if (isCancelled) return;
 
         setPageState({
           wishlist: null,
@@ -154,7 +145,6 @@ function WishlistPage() {
     }
 
     void loadInitialWishlist();
-
     return () => {
       isCancelled = true;
     };
@@ -168,30 +158,21 @@ function WishlistPage() {
   });
 
   const closeReservationDialog = useCallback(() => {
-    if (updatingGiftId !== null) {
-      return;
-    }
-
+    if (updatingGiftId !== null) return;
     setSelectedGift(null);
     setReservationError(null);
   }, [updatingGiftId]);
 
   function handleChooseGift(gift: Gift) {
-    if (gift.isReserved || updatingGiftId !== null) {
-      return;
-    }
-
+    if (gift.isReserved || updatingGiftId !== null) return;
     setReservationError(null);
     setSelectedGift(gift);
   }
 
   async function handleConfirmReservation(guestName: string) {
-    if (!selectedGift || updatingGiftId !== null || !wishlistSlug) {
-      return;
-    }
+    if (!selectedGift || updatingGiftId !== null || !wishlistSlug) return;
 
     const giftId = selectedGift.id;
-
     setUpdatingGiftId(giftId);
     setReservationError(null);
 
@@ -208,21 +189,15 @@ function WishlistPage() {
         setReservationError(
           "This gift has just been chosen by another visitor. The wishlist has been refreshed.",
         );
-
         const result = await fetchWishlistPage(wishlistSlug);
         applyWishlistResult(result);
         return;
       }
 
       await notifyWishlistChanged(wishlistSlug);
-
-      const nextReservationIds = addReservationOwnership(wishlistSlug, giftId);
-
-      setReservationIds(nextReservationIds);
+      setReservationIds(addReservationOwnership(wishlistSlug, giftId));
       setSelectedGift(null);
-
-      const result = await fetchWishlistPage(wishlistSlug);
-      applyWishlistResult(result);
+      applyWishlistResult(await fetchWishlistPage(wishlistSlug));
     } catch (error) {
       setReservationError(getErrorMessage(error));
     } finally {
@@ -231,9 +206,7 @@ function WishlistPage() {
   }
 
   async function handleReleaseGift(giftId: number) {
-    if (updatingGiftId !== null || !wishlistSlug) {
-      return;
-    }
+    if (updatingGiftId !== null || !wishlistSlug) return;
 
     setUpdatingGiftId(giftId);
     setReservationError(null);
@@ -247,16 +220,8 @@ function WishlistPage() {
       });
 
       if (!wasReleased) {
-        const nextReservationIds = removeReservationOwnership(
-          wishlistSlug,
-          giftId,
-        );
-
-        setReservationIds(nextReservationIds);
-
-        const result = await fetchWishlistPage(wishlistSlug);
-        applyWishlistResult(result);
-
+        setReservationIds(removeReservationOwnership(wishlistSlug, giftId));
+        applyWishlistResult(await fetchWishlistPage(wishlistSlug));
         setPageState((currentState) => ({
           ...currentState,
           error:
@@ -266,16 +231,8 @@ function WishlistPage() {
       }
 
       await notifyWishlistChanged(wishlistSlug);
-
-      const nextReservationIds = removeReservationOwnership(
-        wishlistSlug,
-        giftId,
-      );
-
-      setReservationIds(nextReservationIds);
-
-      const result = await fetchWishlistPage(wishlistSlug);
-      applyWishlistResult(result);
+      setReservationIds(removeReservationOwnership(wishlistSlug, giftId));
+      applyWishlistResult(await fetchWishlistPage(wishlistSlug));
     } catch (error) {
       setPageState((currentState) => ({
         ...currentState,
@@ -348,7 +305,6 @@ function WishlistPage() {
             </span>
             <span>WISHLIST.EXE</span>
           </div>
-
           <div className="window-controls" aria-hidden="true">
             <span className="window-control window-control--minimize" />
             <span className="window-control window-control--maximize" />
@@ -357,9 +313,14 @@ function WishlistPage() {
         </header>
 
         <nav className="menu-bar" aria-label="Application menu">
-          <span>File</span>
-          <span>Gifts</span>
-          <span>Help</span>
+          <Link className="menu-bar__link" to="/">
+            <span aria-hidden="true">←</span>
+            All wishlists
+          </Link>
+          <a className="menu-bar__link" href="#gift-section-title">
+            Gifts
+          </a>
+          <span className="menu-bar__item">Help</span>
           <span className="menu-bar__status">
             {isLoading ? "SYNCING" : "ONLINE"}
           </span>
@@ -382,18 +343,15 @@ function WishlistPage() {
             <div className="hero__copy">
               <p className="hero__eyebrow">Birthday protocol activated</p>
               <h1 id="wishlist-title">
-                {wishlist.ownerName}&apos;s
-                <span>birthday wishlist!</span>
+                {wishlist.ownerName}&apos;s<span>birthday wishlist!</span>
               </h1>
               <p className="hero__description">{wishlist.description}</p>
-
               <div className="hero__tags" aria-label="Wishlist features">
                 <span>No duplicates</span>
                 <span>No account needed</span>
                 <span>Maximum surprise</span>
               </div>
             </div>
-
             <div className="hero__art" aria-hidden="true">
               <div className="wow-burst">WOW!</div>
               <div className="gift-box">
@@ -412,7 +370,6 @@ function WishlistPage() {
               <span className="system-panel__light" />
               <strong>System status</strong>
             </div>
-
             <dl className="statistics">
               <div>
                 <dt>Total gifts</dt>
@@ -442,7 +399,6 @@ function WishlistPage() {
                 {gifts.length} {gifts.length === 1 ? "item" : "items"} found
               </span>
             </div>
-
             {gifts.length > 0 ? (
               <div className="gift-grid">
                 {gifts.map((gift) => (
@@ -452,9 +408,7 @@ function WishlistPage() {
                     isOwnedByVisitor={reservationIds.includes(gift.id)}
                     isUpdating={updatingGiftId === gift.id}
                     onChooseGift={handleChooseGift}
-                    onReleaseGift={(giftId) => {
-                      void handleReleaseGift(giftId);
-                    }}
+                    onReleaseGift={(giftId) => void handleReleaseGift(giftId)}
                   />
                 ))}
               </div>
@@ -482,18 +436,14 @@ function WishlistPage() {
     <main className="desktop">
       <div className="desktop__decoration desktop__decoration--circle" />
       <div className="desktop__decoration desktop__decoration--triangle" />
-
       {pageContent}
-
       {selectedGift ? (
         <ReservationDialog
           gift={selectedGift}
           isSubmitting={updatingGiftId === selectedGift.id}
           submitError={reservationError}
           onCancel={closeReservationDialog}
-          onConfirm={(guestName) => {
-            void handleConfirmReservation(guestName);
-          }}
+          onConfirm={(guestName) => void handleConfirmReservation(guestName)}
         />
       ) : null}
     </main>
