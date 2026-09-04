@@ -1,0 +1,72 @@
+import { Link } from "react-router";
+
+import type { WishlistDirectoryItem } from "../types/wishlist-directory";
+
+const cardAccents = ["blue", "pink", "yellow"] as const;
+
+type WishlistDirectoryCardProps = {
+  wishlist: WishlistDirectoryItem;
+  position: number;
+};
+
+function WishlistDirectoryCard({
+  wishlist,
+  position,
+}: WishlistDirectoryCardProps) {
+  const accent = cardAccents[position % cardAccents.length];
+  const reservedGifts = wishlist.totalGifts - wishlist.availableGifts;
+
+  return (
+    <article
+      className={`directory-card directory-card--${accent}`}
+      aria-labelledby={`directory-title-${wishlist.slug}`}
+    >
+      <div className="directory-card__visual" aria-hidden="true">
+        <span>{wishlist.icon}</span>
+      </div>
+
+      <div className="directory-card__content">
+        <div className="directory-card__header">
+          <div>
+            <p>Public wishlist</p>
+
+            <h2 id={`directory-title-${wishlist.slug}`}>
+              {wishlist.ownerName}
+            </h2>
+          </div>
+
+          <span className="directory-card__number">
+            #{String(position + 1).padStart(2, "0")}
+          </span>
+        </div>
+
+        <h3>{wishlist.title}</h3>
+
+        <p className="directory-card__description">{wishlist.description}</p>
+
+        <dl className="directory-card__statistics">
+          <div>
+            <dt>Total</dt>
+            <dd>{wishlist.totalGifts}</dd>
+          </div>
+
+          <div>
+            <dt>Available</dt>
+            <dd>{wishlist.availableGifts}</dd>
+          </div>
+
+          <div>
+            <dt>Reserved</dt>
+            <dd>{reservedGifts}</dd>
+          </div>
+        </dl>
+
+        <Link className="directory-card__link" to={`/w/${wishlist.slug}`}>
+          Open wishlist
+        </Link>
+      </div>
+    </article>
+  );
+}
+
+export default WishlistDirectoryCard;
