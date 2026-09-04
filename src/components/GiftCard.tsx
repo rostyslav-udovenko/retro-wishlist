@@ -1,5 +1,7 @@
 import type { Gift } from "../types/gift";
 
+import GiftMedia from "./GiftMedia";
+
 type GiftCardProps = {
   gift: Gift;
   isOwnedByVisitor: boolean;
@@ -53,8 +55,8 @@ function GiftCard({
       }`}
       aria-labelledby={`gift-title-${gift.key}`}
     >
-      <div className="gift-card__visual" aria-hidden="true">
-        <span className="gift-card__icon">{gift.image}</span>
+      <div className="gift-card__visual">
+        <GiftMedia image={gift.image} giftName={gift.name} />
       </div>
 
       <div className="gift-card__content">
@@ -77,23 +79,38 @@ function GiftCard({
         </div>
 
         <h2 id={`gift-title-${gift.key}`}>{gift.name}</h2>
-
         <p className="gift-card__description">{gift.description}</p>
 
         <div className="gift-card__footer">
           <span className="gift-card__price">{gift.price}</span>
 
-          <button
-            className={`retro-button ${
-              canRelease ? "retro-button--release" : ""
-            }`}
-            type="button"
-            disabled={isUpdating || (gift.isReserved && !isOwnedByVisitor)}
-            aria-busy={isUpdating || undefined}
-            onClick={handleAction}
-          >
-            {buttonLabel}
-          </button>
+          <div className="gift-card__actions">
+            {gift.storeUrl ? (
+              <a
+                className="gift-card__product-link"
+                href={gift.storeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View product
+                <span className="visually-hidden">
+                  : {gift.name}, opens in a new tab
+                </span>
+              </a>
+            ) : null}
+
+            <button
+              className={`retro-button ${
+                canRelease ? "retro-button--release" : ""
+              }`}
+              type="button"
+              disabled={isUpdating || (gift.isReserved && !isOwnedByVisitor)}
+              aria-busy={isUpdating || undefined}
+              onClick={handleAction}
+            >
+              {buttonLabel}
+            </button>
+          </div>
         </div>
       </div>
     </article>
