@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Wishlist management
+.env.wishlist-management
+wishlists/private/*
+!wishlists/private/.gitkeep

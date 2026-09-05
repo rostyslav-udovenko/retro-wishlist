@@ -1,0 +1,46 @@
+{
+  "slug": "example-birthday",
+  "title": "Example Birthday Wishlist",
+  "ownerName": "Example Owner",
+  "description": "An example definition for validating wishlist management tools.",
+  "icon": "🎂",
+  "visibility": "public",
+  "isFeatured": false,
+  "isActive": true,
+  "displayOrder": 100,
+  "gifts": [
+    {
+      "key": "mechanical-keyboard",
+      "name": "Mechanical Keyboard",
+      "description": "A compact wireless keyboard with tactile switches.",
+      "price": "Around €100",
+      "image": "⌨️",
+      "storeUrl": null,
+      "accent": "blue",
+      "displayOrder": 10,
+      "isVisible": true
+    },
+    {
+      "key": "coffee-grinder",
+      "name": "Coffee Grinder",
+      "description": "An electric grinder for fresh coffee at home.",
+      "price": "Around €80",
+      "image": "☕",
+      "storeUrl": "https://example.com/coffee-grinder",
+      "accent": "pink",
+      "displayOrder": 20,
+      "isVisible": true
+    },
+    {
+      "key": "architecture-set",
+      "name": "Architecture Building Set",
+      "description": "A detailed building set for a colorful bookshelf.",
+      "price": "Around €60",
+      "image": "https://example.com/images/architecture-set.webp",
+      "storeUrl": "https://example.com/architecture-set",
+      "accent": "yellow",
+      "displayOrder": 30,
+      "isVisible": true
+    }
+  ]
+}
