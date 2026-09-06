@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "wishlist:validate": "tsx scripts/wishlist/validate.ts",
     "wishlist:preflight": "tsx scripts/wishlist/preflight.ts",
-    "wishlist:import": "tsx scripts/wishlist/import.ts"
+    "wishlist:import": "tsx scripts/wishlist/import.ts",
+    "wishlist:export": "tsx scripts/wishlist/export.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",
