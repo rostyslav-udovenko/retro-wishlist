@@ -30,7 +30,9 @@ async function readWishlistDefinition(
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
 
-    throw new Error(`Unable to read wishlist definition:\n${message}`);
+    throw new Error(`Unable to read wishlist definition:\n${message}`, {
+      cause: error,
+    });
   }
 
   let input: unknown;
@@ -40,7 +42,9 @@ async function readWishlistDefinition(
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
 
-    throw new Error(`Wishlist definition contains invalid JSON:\n${message}`);
+    throw new Error(`Wishlist definition contains invalid JSON:\n${message}`, {
+      cause: error,
+    });
   }
 
   const result = wishlistDefinitionSchema.safeParse(input);
@@ -61,17 +65,24 @@ async function readWishlistDefinition(
 }
 
 async function checkExistingWishlist(slug: string): Promise<boolean> {
-  const { data, error } = await managementSupabase
-    .from("wishlists")
-    .select("id")
-    .eq("slug", slug)
-    .maybeSingle();
+  const { data, error } = await managementSupabase.rpc(
+    "management_wishlist_exists",
+    {
+      p_slug: slug,
+    },
+  );
 
   if (error) {
-    throw new Error(`Unable to check the wishlist slug: ${error.message}`);
+    throw new Error(`Unable to check the wishlist slug: ${error.message}`, {
+      cause: error,
+    });
   }
 
-  return data !== null;
+  if (typeof data !== "boolean") {
+    throw new Error("Wishlist slug check returned an invalid response.");
+  }
+
+  return data;
 }
 
 function printPreflightPlan(

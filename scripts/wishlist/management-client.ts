@@ -1,10 +1,20 @@
 import { createClient } from "@supabase/supabase-js";
 import { config } from "dotenv";
 
-config({
+const environmentResult = config({
   path: ".env.wishlist-management",
   quiet: true,
+  override: true,
 });
+
+if (environmentResult.error) {
+  throw new Error(
+    "Unable to load .env.wishlist-management.",
+    {
+      cause: environmentResult.error,
+    },
+  );
+}
 
 function getRequiredEnvironmentVariable(name: string): string {
   const value = process.env[name]?.trim();
