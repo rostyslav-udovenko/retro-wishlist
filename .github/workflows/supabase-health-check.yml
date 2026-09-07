@@ -1,0 +1,122 @@
+name: Supabase health check
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-health-check
+  cancel-in-progress: false
+
+jobs:
+  health-check:
+    name: Check public wishlist RPC
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Validate required configuration
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SUPABASE_URL}" ]; then
+            echo "::error::SUPABASE_URL is not configured."
+            exit 1
+          fi
+
+          if [ -z "${SUPABASE_PUBLISHABLE_KEY}" ]; then
+            echo "::error::SUPABASE_PUBLISHABLE_KEY is not configured."
+            exit 1
+          fi
+
+          case "${SUPABASE_URL}" in
+            https://*)
+              ;;
+            *)
+              echo "::error::SUPABASE_URL must use HTTPS."
+              exit 1
+              ;;
+          esac
+
+      - name: Call public wishlist RPC
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          set -euo pipefail
+
+          response_file="$(mktemp)"
+          trap 'rm -f "${response_file}"' EXIT
+
+          http_status="$(
+            curl \
+              --silent \
+              --show-error \
+              --request POST \
+              --retry 3 \
+              --retry-delay 2 \
+              --retry-all-errors \
+              --connect-timeout 10 \
+              --max-time 30 \
+              --output "${response_file}" \
+              --write-out "%{http_code}" \
+              --header "apikey: ${SUPABASE_PUBLISHABLE_KEY}" \
+              --header "Authorization: Bearer ${SUPABASE_PUBLISHABLE_KEY}" \
+              --header "Content-Type: application/json" \
+              --data '{}' \
+              "${SUPABASE_URL}/rest/v1/rpc/get_featured_wishlists"
+          )"
+
+          if [ "${http_status}" -lt 200 ] || [ "${http_status}" -ge 300 ]; then
+            echo "::error::Supabase health check returned HTTP ${http_status}."
+            exit 1
+          fi
+
+          node - "${response_file}" <<'NODE'
+          const fs = require("node:fs");
+
+          const responsePath = process.argv[2];
+          const responseText = fs.readFileSync(responsePath, "utf8");
+
+          let response;
+
+          try {
+            response = JSON.parse(responseText);
+          } catch (error) {
+            console.error(
+              "::error::Supabase health check returned invalid JSON.",
+            );
+            process.exit(1);
+          }
+
+          if (!Array.isArray(response)) {
+            console.error(
+              "::error::Supabase health check did not return an array.",
+            );
+            process.exit(1);
+          }
+
+          for (const item of response) {
+            if (
+              typeof item !== "object" ||
+              item === null ||
+              typeof item.slug !== "string" ||
+              typeof item.title !== "string"
+            ) {
+              console.error(
+                "::error::Supabase health check returned an invalid public wishlist row.",
+              );
+              process.exit(1);
+            }
+          }
+
+          console.log("Supabase health check passed.");
+          console.log(`Public featured wishlists: ${response.length}`);
+          NODE
