@@ -27,3 +27,6 @@ dist-ssr
 .env.wishlist-management
 wishlists/private/*
 !wishlists/private/.gitkeep
+
+# Local database backups
+backups/

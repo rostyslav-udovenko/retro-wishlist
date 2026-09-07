@@ -12,7 +12,8 @@
     "wishlist:preflight": "tsx scripts/wishlist/preflight.ts",
     "wishlist:import": "tsx scripts/wishlist/import.ts",
     "wishlist:export": "tsx scripts/wishlist/export.ts",
-    "wishlist:sync": "tsx scripts/wishlist/sync.ts"
+    "wishlist:sync": "tsx scripts/wishlist/sync.ts",
+    "supabase:backup": "bash scripts/backup-supabase.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",
