@@ -1,6 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
-import { subscribeToWishlistChanges } from "../services/wishlist-realtime";
+import {
+  broadcastWishlistChange,
+  createWishlistChannel,
+  removeWishlistChannel,
+} from "../services/wishlist-realtime";
 
 type UseWishlistSyncOptions = {
   wishlistSlug: string;
@@ -8,39 +13,81 @@ type UseWishlistSyncOptions = {
   onRefresh: () => Promise<void>;
 };
 
+type UseWishlistSyncResult = {
+  broadcastChange: () => Promise<void>;
+};
+
 export function useWishlistSync({
   wishlistSlug,
   enabled,
   onRefresh,
-}: UseWishlistSyncOptions): void {
+}: UseWishlistSyncOptions): UseWishlistSyncResult {
   const onRefreshRef = useRef(onRefresh);
+  const channelRef = useRef<RealtimeChannel | null>(null);
+  const isSubscribedRef = useRef(false);
   const isRefreshingRef = useRef(false);
+  const refreshPendingRef = useRef(false);
 
   useEffect(() => {
     onRefreshRef.current = onRefresh;
   }, [onRefresh]);
 
-  useEffect(() => {
-    if (!enabled) {
+  const refreshWishlist = useCallback(async () => {
+    if (isRefreshingRef.current) {
+      refreshPendingRef.current = true;
       return;
     }
 
-    async function refreshWishlist() {
-      if (isRefreshingRef.current) {
+    isRefreshingRef.current = true;
+
+    try {
+      do {
+        refreshPendingRef.current = false;
+        await onRefreshRef.current();
+      } while (refreshPendingRef.current);
+    } finally {
+      isRefreshingRef.current = false;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) {
+      channelRef.current = null;
+      isSubscribedRef.current = false;
+      return;
+    }
+
+    let isDisposed = false;
+
+    const channel = createWishlistChannel(wishlistSlug, () => {
+      void refreshWishlist();
+    });
+
+    channelRef.current = channel;
+
+    channel.subscribe((status) => {
+      if (isDisposed) {
         return;
       }
 
-      isRefreshingRef.current = true;
+      if (status === "SUBSCRIBED") {
+        const wasSubscribed = isSubscribedRef.current;
+        isSubscribedRef.current = true;
 
-      try {
-        await onRefreshRef.current();
-      } finally {
-        isRefreshingRef.current = false;
+        if (!wasSubscribed) {
+          void refreshWishlist();
+        }
+
+        return;
       }
-    }
 
-    const unsubscribe = subscribeToWishlistChanges(wishlistSlug, () => {
-      void refreshWishlist();
+      if (
+        status === "CHANNEL_ERROR" ||
+        status === "TIMED_OUT" ||
+        status === "CLOSED"
+      ) {
+        isSubscribedRef.current = false;
+      }
     });
 
     function handleWindowFocus() {
@@ -57,9 +104,30 @@ export function useWishlistSync({
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      unsubscribe();
+      isDisposed = true;
+      isSubscribedRef.current = false;
+
+      if (channelRef.current === channel) {
+        channelRef.current = null;
+      }
+
+      void removeWishlistChannel(channel);
       window.removeEventListener("focus", handleWindowFocus);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [enabled, wishlistSlug]);
+  }, [enabled, refreshWishlist, wishlistSlug]);
+
+  const broadcastChange = useCallback(async () => {
+    const channel = channelRef.current;
+
+    if (!channel || !isSubscribedRef.current) {
+      throw new Error("Realtime channel is not currently subscribed.");
+    }
+
+    await broadcastWishlistChange(channel);
+  }, []);
+
+  return {
+    broadcastChange,
+  };
 }

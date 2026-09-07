@@ -5,7 +5,6 @@ import AboutDialog from "../components/AboutDialog";
 import GiftCard from "../components/GiftCard";
 import ReservationDialog from "../components/ReservationDialog";
 import { useWishlistSync } from "../hooks/use-wishlist-sync";
-import { broadcastWishlistChange } from "../services/wishlist-realtime";
 import {
   fetchWishlistPage,
   releaseGift,
@@ -39,17 +38,6 @@ function getErrorMessage(error: unknown): string {
   return error instanceof Error
     ? error.message
     : "An unexpected error occurred while loading the wishlist.";
-}
-
-async function notifyWishlistChanged(wishlistSlug: string): Promise<void> {
-  try {
-    await broadcastWishlistChange(wishlistSlug);
-  } catch (error) {
-    console.warn(
-      "The wishlist was updated, but the Realtime notification failed.",
-      error,
-    );
-  }
 }
 
 function WishlistPage() {
@@ -145,12 +133,38 @@ function WishlistPage() {
     };
   }, [wishlistSlug]);
 
-  useWishlistSync({
+  const { broadcastChange } = useWishlistSync({
     wishlistSlug,
     enabled:
       wishlistSlug.length > 0 && pageState.wishlist?.slug === wishlistSlug,
     onRefresh: reloadWishlist,
   });
+
+  const notifyWishlistChanged = useCallback(() => {
+    void broadcastChange().catch((error: unknown) => {
+      console.warn(
+        "The wishlist was updated, but the Realtime notification failed.",
+        error,
+      );
+    });
+  }, [broadcastChange]);
+
+  const updateGiftReservationLocally = useCallback(
+    (giftId: number, isReserved: boolean) => {
+      setPageState((currentState) => ({
+        ...currentState,
+        gifts: currentState.gifts.map((gift) =>
+          gift.id === giftId
+            ? {
+                ...gift,
+                isReserved,
+              }
+            : gift,
+        ),
+      }));
+    },
+    [],
+  );
 
   const closeReservationDialog = useCallback(() => {
     if (updatingGiftId !== null) return;
@@ -188,10 +202,11 @@ function WishlistPage() {
         return;
       }
 
-      await notifyWishlistChanged(wishlistSlug);
       setReservationIds(addReservationOwnership(wishlistSlug, giftId));
+      updateGiftReservationLocally(giftId, true);
       setSelectedGift(null);
-      applyWishlistResult(await fetchWishlistPage(wishlistSlug));
+      notifyWishlistChanged();
+      void reloadWishlist();
     } catch (error) {
       setReservationError(getErrorMessage(error));
     } finally {
@@ -224,9 +239,10 @@ function WishlistPage() {
         return;
       }
 
-      await notifyWishlistChanged(wishlistSlug);
       setReservationIds(removeReservationOwnership(wishlistSlug, giftId));
-      applyWishlistResult(await fetchWishlistPage(wishlistSlug));
+      updateGiftReservationLocally(giftId, false);
+      notifyWishlistChanged();
+      void reloadWishlist();
     } catch (error) {
       setPageState((currentState) => ({
         ...currentState,
