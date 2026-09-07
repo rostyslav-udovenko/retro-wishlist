@@ -15,12 +15,19 @@ function getWishlistChannelName(slug: string): string {
   return `${wishlistChannelPrefix}${normalizeWishlistSlug(slug)}`;
 }
 
-export function subscribeToWishlistChanges(
+export function createWishlistChannel(
   wishlistSlug: string,
   onWishlistChange: WishlistChangeHandler,
-): () => void {
-  const channel = supabase
-    .channel(getWishlistChannelName(wishlistSlug))
+): RealtimeChannel {
+  return supabase
+    .channel(getWishlistChannelName(wishlistSlug), {
+      config: {
+        broadcast: {
+          self: false,
+          ack: true,
+        },
+      },
+    })
     .on(
       "broadcast",
       {
@@ -29,61 +36,27 @@ export function subscribeToWishlistChanges(
       () => {
         onWishlistChange();
       },
-    )
-    .subscribe();
-
-  return () => {
-    void supabase.removeChannel(channel);
-  };
+    );
 }
 
 export async function broadcastWishlistChange(
-  wishlistSlug: string,
+  channel: RealtimeChannel,
 ): Promise<void> {
-  const channel = supabase.channel(getWishlistChannelName(wishlistSlug));
+  const response = await channel.send({
+    type: "broadcast",
+    event: giftChangedEvent,
+    payload: {},
+  });
 
-  try {
-    await waitForSubscription(channel);
-
-    const response = await channel.send({
-      type: "broadcast",
-      event: giftChangedEvent,
-      payload: {},
-    });
-
-    if (response !== "ok") {
-      throw new Error(
-        `Realtime broadcast returned an unexpected status: ${response}`,
-      );
-    }
-  } finally {
-    await supabase.removeChannel(channel);
+  if (response !== "ok") {
+    throw new Error(
+      `Realtime broadcast returned an unexpected status: ${response}`,
+    );
   }
 }
 
-function waitForSubscription(channel: RealtimeChannel): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const timeoutId = window.setTimeout(() => {
-      void supabase.removeChannel(channel);
-
-      reject(new Error("Realtime channel subscription timed out."));
-    }, 10_000);
-
-    channel.subscribe((status, error) => {
-      if (status === "SUBSCRIBED") {
-        window.clearTimeout(timeoutId);
-        resolve();
-        return;
-      }
-
-      if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
-        window.clearTimeout(timeoutId);
-
-        reject(
-          error ??
-            new Error(`Unable to subscribe to the Realtime channel: ${status}`),
-        );
-      }
-    });
-  });
+export async function removeWishlistChannel(
+  channel: RealtimeChannel,
+): Promise<void> {
+  await supabase.removeChannel(channel);
 }
