@@ -10,6 +10,11 @@ import {
   releaseGift,
   reserveGift,
 } from "../services/wishlists";
+import {
+  getCachedWishlistPage,
+  setCachedWishlistPage,
+  updateCachedGiftReservation,
+} from "../services/wishlist-cache";
 import type { Gift } from "../types/gift";
 import type { Wishlist } from "../types/wishlist";
 import {
@@ -44,7 +49,22 @@ function WishlistPage() {
   const { slug } = useParams<{ slug: string }>();
   const wishlistSlug = slug?.trim().toLowerCase() ?? "";
 
-  const [pageState, setPageState] = useState<PageState>(initialPageState);
+  const [pageState, setPageState] = useState<PageState>(() => {
+    const cachedResult = wishlistSlug
+      ? getCachedWishlistPage(wishlistSlug)
+      : null;
+
+    if (!cachedResult) {
+      return initialPageState;
+    }
+
+    return {
+      wishlist: cachedResult.wishlist,
+      gifts: cachedResult.gifts,
+      isLoading: true,
+      error: null,
+    };
+  });
   const [reservationIds, setReservationIds] = useState<number[]>(() =>
     wishlistSlug ? getReservationIds(wishlistSlug) : [],
   );
@@ -62,6 +82,7 @@ function WishlistPage() {
       setReservationIds(
         reconcileReservationOwnership(wishlistSlug, reservedGiftIds),
       );
+      setCachedWishlistPage(wishlistSlug, result);
       setPageState({
         wishlist: result.wishlist,
         gifts: result.gifts,
@@ -94,6 +115,28 @@ function WishlistPage() {
 
   useEffect(() => {
     let isCancelled = false;
+    const cachedResult = wishlistSlug
+      ? getCachedWishlistPage(wishlistSlug)
+      : null;
+
+    if (cachedResult) {
+      const reservedGiftIds = cachedResult.gifts
+        .filter((gift) => gift.isReserved)
+        .map((gift) => gift.id);
+
+      setReservationIds(
+        reconcileReservationOwnership(wishlistSlug, reservedGiftIds),
+      );
+      setPageState({
+        wishlist: cachedResult.wishlist,
+        gifts: cachedResult.gifts,
+        isLoading: true,
+        error: null,
+      });
+    } else {
+      setReservationIds(wishlistSlug ? getReservationIds(wishlistSlug) : []);
+      setPageState(initialPageState);
+    }
 
     async function loadInitialWishlist() {
       if (!wishlistSlug) return;
@@ -101,29 +144,16 @@ function WishlistPage() {
       try {
         const result = await fetchWishlistPage(wishlistSlug);
         if (isCancelled) return;
-
-        const reservedGiftIds = result.gifts
-          .filter((gift) => gift.isReserved)
-          .map((gift) => gift.id);
-
-        setReservationIds(
-          reconcileReservationOwnership(wishlistSlug, reservedGiftIds),
-        );
-        setPageState({
-          wishlist: result.wishlist,
-          gifts: result.gifts,
-          isLoading: false,
-          error: null,
-        });
+        applyWishlistResult(result);
       } catch (error) {
         if (isCancelled) return;
 
-        setPageState({
-          wishlist: null,
-          gifts: [],
+        setPageState((currentState) => ({
+          wishlist: currentState.wishlist,
+          gifts: currentState.gifts,
           isLoading: false,
           error: getErrorMessage(error),
-        });
+        }));
       }
     }
 
@@ -131,7 +161,7 @@ function WishlistPage() {
     return () => {
       isCancelled = true;
     };
-  }, [wishlistSlug]);
+  }, [applyWishlistResult, wishlistSlug]);
 
   const { broadcastChange } = useWishlistSync({
     wishlistSlug,
@@ -151,6 +181,8 @@ function WishlistPage() {
 
   const updateGiftReservationLocally = useCallback(
     (giftId: number, isReserved: boolean) => {
+      updateCachedGiftReservation(wishlistSlug, giftId, isReserved);
+
       setPageState((currentState) => ({
         ...currentState,
         gifts: currentState.gifts.map((gift) =>
@@ -163,7 +195,7 @@ function WishlistPage() {
         ),
       }));
     },
-    [],
+    [wishlistSlug],
   );
 
   const closeReservationDialog = useCallback(() => {
