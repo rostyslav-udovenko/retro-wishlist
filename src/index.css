@@ -1,21 +1,17 @@
 :root {
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  color: #111111;
-  background: #7c3aed;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
+  /* typography */
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
+
+  /* palette */
   --black: #111111;
   --white: #ffffff;
   --purple: #7c3aed;
-  --violet: #a855f7;
   --blue: #38bdf8;
   --cyan: #22d3ee;
   --pink: #fb7185;
@@ -24,6 +20,30 @@
   --orange: #fb923c;
   --mint: #6ee7b7;
   --gray: #e5e7eb;
+
+  /* semantic surfaces */
+  --cream: #fffdf5;
+  --error-text: #991b1b;
+  --error-bg: var(--pink);
+
+  /* alpha / muted */
+  --overlay-backdrop: rgb(17 17 17 / 72%);
+  --text-muted: rgb(17 17 17 / 55%);
+  --border-faint: rgb(17 17 17 / 12%);
+  --border-dashed: rgb(17 17 17 / 35%);
+
+  /* borders */
+  --border-thick: 4px solid var(--black);
+  --border-thin: 3px solid var(--black);
+  --border-hairline: 2px solid var(--black);
+
+  /* elevation */
+  --shadow-window: 14px 14px 0 var(--black);
+  --shadow-hero: 10px 10px 0 var(--black);
+  --shadow-card: 8px 8px 0 var(--black);
+  --shadow-button: 4px 4px 0 var(--black);
+  --shadow-small: 3px 3px 0 var(--black);
+  --shadow-drop-hero: drop-shadow(7px 7px 0 var(--black));
 }
 
 *,
@@ -41,6 +61,9 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  font-family: var(--font-sans);
+  color: var(--black);
+  background: var(--purple);
 }
 
 body,
