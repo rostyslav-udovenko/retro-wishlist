@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 import AboutDialog from "../components/AboutDialog";
 import WishlistDirectoryCard from "../components/WishlistDirectoryCard";
 import { fetchFeaturedWishlists } from "../services/wishlist-directory";
+import {
+  getCachedWishlistDirectory,
+  setCachedWishlistDirectory,
+} from "../services/wishlist-directory-cache";
 import type { WishlistDirectoryItem } from "../types/wishlist-directory";
 
 type DirectoryState = {
@@ -24,9 +28,17 @@ function getErrorMessage(error: unknown): string {
 }
 
 function HomePage() {
-  const [directoryState, setDirectoryState] = useState<DirectoryState>(
-    initialDirectoryState,
-  );
+  const [directoryState, setDirectoryState] = useState<DirectoryState>(() => {
+    const cachedWishlists = getCachedWishlistDirectory();
+
+    return cachedWishlists
+      ? {
+          wishlists: cachedWishlists,
+          isLoading: true,
+          error: null,
+        }
+      : initialDirectoryState;
+  });
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   useEffect(() => {
@@ -36,25 +48,22 @@ function HomePage() {
       try {
         const wishlists = await fetchFeaturedWishlists();
 
-        if (isCancelled) {
-          return;
-        }
+        if (isCancelled) return;
 
+        setCachedWishlistDirectory(wishlists);
         setDirectoryState({
           wishlists,
           isLoading: false,
           error: null,
         });
       } catch (error) {
-        if (isCancelled) {
-          return;
-        }
+        if (isCancelled) return;
 
-        setDirectoryState({
-          wishlists: [],
+        setDirectoryState((currentState) => ({
+          wishlists: currentState.wishlists,
           isLoading: false,
           error: getErrorMessage(error),
-        });
+        }));
       }
     }
 
@@ -74,24 +83,24 @@ function HomePage() {
 
     try {
       const wishlists = await fetchFeaturedWishlists();
-
+      setCachedWishlistDirectory(wishlists);
       setDirectoryState({
         wishlists,
         isLoading: false,
         error: null,
       });
     } catch (error) {
-      setDirectoryState({
-        wishlists: [],
+      setDirectoryState((currentState) => ({
+        wishlists: currentState.wishlists,
         isLoading: false,
         error: getErrorMessage(error),
-      });
+      }));
     }
   }
 
   const { wishlists, isLoading, error } = directoryState;
 
-  if (isLoading) {
+  if (isLoading && wishlists.length === 0) {
     return (
       <main className="desktop">
         <div className="desktop__decoration desktop__decoration--circle" />
@@ -105,11 +114,8 @@ function HomePage() {
           <span className="page-state__icon" aria-hidden="true">
             ⏳
           </span>
-
           <p className="page-state__eyebrow">Scanning directory</p>
-
           <h1>Loading wishlists...</h1>
-
           <p>
             Please wait while the public wishlist directory is being prepared.
           </p>
@@ -118,7 +124,7 @@ function HomePage() {
     );
   }
 
-  if (error) {
+  if (error && wishlists.length === 0) {
     return (
       <main className="desktop">
         <div className="desktop__decoration desktop__decoration--circle" />
@@ -128,13 +134,9 @@ function HomePage() {
           <span className="page-state__icon" aria-hidden="true">
             ⚠️
           </span>
-
           <p className="page-state__eyebrow">Directory error</p>
-
           <h1>Wishlists unavailable</h1>
-
           <p>{error}</p>
-
           <button
             className="page-state__button"
             type="button"
@@ -161,10 +163,8 @@ function HomePage() {
             <span className="title-bar__icon" aria-hidden="true">
               🎁
             </span>
-
             <span>WISHLIST.EXE</span>
           </div>
-
           <div className="window-controls" aria-hidden="true">
             <span className="window-control window-control--minimize" />
             <span className="window-control window-control--maximize" />
@@ -176,7 +176,6 @@ function HomePage() {
           <a className="menu-bar__link" href="#wishlist-list-title">
             Wishlists
           </a>
-
           <button
             className="menu-bar__link menu-bar__button"
             type="button"
@@ -184,20 +183,30 @@ function HomePage() {
           >
             Help
           </button>
-
-          <span className="menu-bar__status">ONLINE</span>
+          <span className="menu-bar__status">
+            {isLoading ? "SYNCING" : "ONLINE"}
+          </span>
         </nav>
 
         <div className="wishlist-window__body">
+          {error ? (
+            <div className="inline-error" role="alert">
+              <div>
+                <strong>Refresh failed</strong>
+                <span>{error}</span>
+              </div>
+              <button type="button" onClick={() => void retryDirectoryLoad()}>
+                Retry
+              </button>
+            </div>
+          ) : null}
+
           <section className="directory-hero">
             <div className="directory-hero__copy">
               <p className="hero__eyebrow">Public directory online</p>
-
               <h1 id="directory-title">
-                Birthday
-                <span>wishlists!</span>
+                Birthday<span>wishlists!</span>
               </h1>
-
               <p>
                 Pick a person. Open a wishlist. Choose a gift without creating
                 duplicates or coordinating in a group chat.
@@ -206,15 +215,12 @@ function HomePage() {
 
             <div className="directory-hero__art" aria-hidden="true">
               <span className="directory-hero__primary-icon">🎂</span>
-
               <span className="directory-hero__spark directory-hero__spark--one">
                 ★
               </span>
-
               <span className="directory-hero__spark directory-hero__spark--two">
                 ✦
               </span>
-
               <span className="directory-hero__spark directory-hero__spark--three">
                 ●
               </span>
@@ -228,10 +234,8 @@ function HomePage() {
             <div className="section-heading">
               <div>
                 <p>Directory: /public/wishlists</p>
-
                 <h2 id="wishlist-list-title">Choose a wishlist</h2>
               </div>
-
               <span>
                 {wishlists.length}{" "}
                 {wishlists.length === 1 ? "wishlist" : "wishlists"} found
@@ -251,10 +255,8 @@ function HomePage() {
             ) : (
               <div className="empty-state">
                 <span aria-hidden="true">📭</span>
-
                 <div>
                   <h3>No public wishlists</h3>
-
                   <p>
                     There are no featured public wishlists available right now.
                   </p>

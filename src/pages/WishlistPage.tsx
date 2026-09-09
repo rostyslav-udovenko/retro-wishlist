@@ -10,6 +10,7 @@ import {
   releaseGift,
   reserveGift,
 } from "../services/wishlists";
+import { updateCachedDirectoryReservation } from "../services/wishlist-directory-cache";
 import {
   getCachedWishlistPage,
   setCachedWishlistPage,
@@ -54,9 +55,7 @@ function WishlistPage() {
       ? getCachedWishlistPage(wishlistSlug)
       : null;
 
-    if (!cachedResult) {
-      return initialPageState;
-    }
+    if (!cachedResult) return initialPageState;
 
     return {
       wishlist: cachedResult.wishlist,
@@ -182,6 +181,7 @@ function WishlistPage() {
   const updateGiftReservationLocally = useCallback(
     (giftId: number, isReserved: boolean) => {
       updateCachedGiftReservation(wishlistSlug, giftId, isReserved);
+      updateCachedDirectoryReservation(wishlistSlug, isReserved);
 
       setPageState((currentState) => ({
         ...currentState,
