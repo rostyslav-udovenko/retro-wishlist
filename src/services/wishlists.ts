@@ -1,6 +1,12 @@
 import { supabase } from "../lib/supabase";
 import { isGiftAccent, type Gift, type GiftAccent } from "../types/gift";
 import type { Wishlist, WishlistVisibility } from "../types/wishlist";
+import {
+  isWishlistCacheFresh,
+  loadWishlistPageDeduplicated,
+  normalizeWishlistSlug,
+  type WishlistPageResult,
+} from "./wishlist-cache";
 
 type WishlistRow = {
   slug: string;
@@ -36,10 +42,6 @@ export type ReleaseGiftInput = {
   giftId: number;
   visitorToken: string;
 };
-
-function normalizeWishlistSlug(slug: string): string {
-  return slug.trim().toLowerCase();
-}
 
 function normalizeGuestName(name: string): string {
   return name.trim().replace(/\s+/g, " ");
@@ -88,17 +90,10 @@ export async function fetchWishlist(slug: string): Promise<Wishlist | null> {
     p_wishlist_slug: normalizeWishlistSlug(slug),
   });
 
-  if (error) {
-    throw new Error(`Unable to load wishlist: ${error.message}`);
-  }
+  if (error) throw new Error(`Unable to load wishlist: ${error.message}`);
 
-  const rows = (data ?? []) as WishlistRow[];
-
-  if (rows.length === 0) {
-    return null;
-  }
-
-  return mapWishlist(rows[0]);
+  const row = ((data ?? []) as WishlistRow[])[0];
+  return row ? mapWishlist(row) : null;
 }
 
 export async function fetchWishlistGifts(slug: string): Promise<Gift[]> {
@@ -110,31 +105,32 @@ export async function fetchWishlistGifts(slug: string): Promise<Gift[]> {
     throw new Error(`Unable to load wishlist gifts: ${error.message}`);
   }
 
-  const rows = (data ?? []) as GiftRow[];
-
-  return rows.map(mapGift);
+  return ((data ?? []) as GiftRow[]).map(mapGift);
 }
 
-export async function fetchWishlistPage(slug: string): Promise<{
-  wishlist: Wishlist | null;
-  gifts: Gift[];
-}> {
+async function fetchWishlistPageFromSupabase(
+  slug: string,
+): Promise<WishlistPageResult> {
   const [wishlist, gifts] = await Promise.all([
     fetchWishlist(slug),
     fetchWishlistGifts(slug),
   ]);
 
-  if (!wishlist) {
-    return {
-      wishlist: null,
-      gifts: [],
-    };
-  }
+  return wishlist ? { wishlist, gifts } : { wishlist: null, gifts: [] };
+}
 
-  return {
-    wishlist,
-    gifts,
-  };
+export async function fetchWishlistPage(
+  slug: string,
+): Promise<WishlistPageResult> {
+  const normalizedSlug = normalizeWishlistSlug(slug);
+  return loadWishlistPageDeduplicated(normalizedSlug, () =>
+    fetchWishlistPageFromSupabase(normalizedSlug),
+  );
+}
+
+export async function prefetchWishlistPage(slug: string): Promise<void> {
+  if (isWishlistCacheFresh(slug)) return;
+  await fetchWishlistPage(slug);
 }
 
 export async function reserveGift({
@@ -156,10 +152,7 @@ export async function reserveGift({
     p_visitor_token: visitorToken,
   });
 
-  if (error) {
-    throw new Error(`Unable to reserve gift: ${error.message}`);
-  }
-
+  if (error) throw new Error(`Unable to reserve gift: ${error.message}`);
   return data === true;
 }
 
@@ -174,9 +167,6 @@ export async function releaseGift({
     p_visitor_token: visitorToken,
   });
 
-  if (error) {
-    throw new Error(`Unable to release gift: ${error.message}`);
-  }
-
+  if (error) throw new Error(`Unable to release gift: ${error.message}`);
   return data === true;
 }

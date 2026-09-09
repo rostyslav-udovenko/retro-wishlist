@@ -1,5 +1,9 @@
 import { supabase } from "../lib/supabase";
 import type { WishlistDirectoryItem } from "../types/wishlist-directory";
+import {
+  getCachedWishlistDirectory,
+  loadWishlistDirectoryDeduplicated,
+} from "./wishlist-directory-cache";
 
 type WishlistDirectoryRow = {
   slug: string;
@@ -25,7 +29,7 @@ function mapWishlistDirectoryItem(
   };
 }
 
-export async function fetchFeaturedWishlists(): Promise<
+async function fetchFeaturedWishlistsFromSupabase(): Promise<
   WishlistDirectoryItem[]
 > {
   const { data, error } = await supabase.rpc("get_featured_wishlists");
@@ -34,7 +38,15 @@ export async function fetchFeaturedWishlists(): Promise<
     throw new Error(`Unable to load wishlist directory: ${error.message}`);
   }
 
-  const rows = (data ?? []) as WishlistDirectoryRow[];
+  return ((data ?? []) as WishlistDirectoryRow[]).map(mapWishlistDirectoryItem);
+}
 
-  return rows.map(mapWishlistDirectoryItem);
+export function getCachedFeaturedWishlists(): WishlistDirectoryItem[] | null {
+  return getCachedWishlistDirectory();
+}
+
+export async function fetchFeaturedWishlists(): Promise<
+  WishlistDirectoryItem[]
+> {
+  return loadWishlistDirectoryDeduplicated(fetchFeaturedWishlistsFromSupabase);
 }
