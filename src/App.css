@@ -437,7 +437,7 @@
   border-left: 3px solid var(--black);
 }
 .statistics dt {
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -497,8 +497,8 @@
 .gift-card {
   --gift-accent: var(--blue);
   display: grid;
-  grid-template-columns: minmax(130px, 0.38fr) minmax(0, 1fr);
-  min-height: 280px;
+  grid-template-columns: minmax(140px, 0.36fr) minmax(0, 1fr);
+  min-height: 300px;
   overflow: hidden;
   border: 4px solid var(--black);
   background: var(--white);
@@ -560,7 +560,7 @@
 .gift-card__status {
   padding: 0.35rem 0.55rem;
   border: 3px solid var(--black);
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -575,8 +575,8 @@
   background: var(--yellow);
 }
 .gift-card__number {
-  color: rgb(17 17 17 / 55%);
-  font-family: "Courier New", Courier, monospace;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 900;
 }
@@ -601,7 +601,7 @@
   margin-top: auto;
 }
 .gift-card__price {
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.76rem;
   font-weight: 900;
 }
@@ -726,8 +726,8 @@
 .directory-card {
   --directory-accent: var(--blue);
   display: grid;
-  grid-template-columns: minmax(130px, 0.35fr) minmax(0, 1fr);
-  min-height: 350px;
+  grid-template-columns: minmax(140px, 0.36fr) minmax(0, 1fr);
+  min-height: 300px;
   overflow: hidden;
   border: 4px solid var(--black);
   background: var(--white);
@@ -775,7 +775,7 @@
 }
 .directory-card__header p {
   margin: 0 0 0.35rem;
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -789,8 +789,8 @@
   text-transform: uppercase;
 }
 .directory-card__number {
-  color: rgb(17 17 17 / 55%);
-  font-family: "Courier New", Courier, monospace;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 900;
 }
@@ -819,15 +819,16 @@
   border-left: 3px solid var(--black);
 }
 .directory-card__statistics dt {
-  font-family: "Courier New", Courier, monospace;
-  font-size: 0.58rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
   font-weight: 900;
   text-transform: uppercase;
 }
 .directory-card__statistics dd {
   margin: 0.2rem 0 0;
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   font-weight: 1000;
+  line-height: 1;
 }
 .directory-card__statistics div:nth-child(2) {
   background: var(--mint);
