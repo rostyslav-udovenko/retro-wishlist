@@ -87,7 +87,7 @@ function GiftCard({
           <div className="gift-card__actions">
             {gift.storeUrl ? (
               <a
-                className="gift-card__product-link"
+                className="retro-button retro-button--secondary retro-button--full"
                 href={gift.storeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -100,7 +100,7 @@ function GiftCard({
             ) : null}
 
             <button
-              className={`retro-button ${
+              className={`retro-button retro-button--primary ${
                 canRelease ? "retro-button--release" : ""
               }`}
               type="button"

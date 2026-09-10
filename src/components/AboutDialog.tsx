@@ -101,7 +101,7 @@ function AboutDialog({ onClose }: AboutDialogProps) {
 
           <button
             ref={closeButtonRef}
-            className="about-dialog__close"
+            className="retro-icon-button"
             type="button"
             aria-label="Close About dialog"
             onClick={onClose}
@@ -153,12 +153,22 @@ function AboutDialog({ onClose }: AboutDialogProps) {
           </dl>
 
           <div className="about-dialog__links">
-            <a href={repositoryUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              className="retro-button"
+              href={repositoryUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               GitHub repository
               <span className="visually-hidden">, opens in a new tab</span>
             </a>
 
-            <a href={feedbackUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              className="retro-button"
+              href={feedbackUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Send feedback
               <span className="visually-hidden">, opens in a new tab</span>
             </a>
@@ -167,7 +177,11 @@ function AboutDialog({ onClose }: AboutDialogProps) {
           <footer className="about-dialog__footer">
             <span>Made with ♥ and too many colors</span>
 
-            <button type="button" onClick={onClose}>
+            <button
+              className="retro-button retro-button--mint"
+              type="button"
+              onClick={onClose}
+            >
               Close
             </button>
           </footer>
