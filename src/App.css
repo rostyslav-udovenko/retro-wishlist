@@ -635,13 +635,13 @@
 }
 
 .retro-button:hover:not(:disabled) {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--black);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--black);
 }
 
 .retro-button:active:not(:disabled) {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 var(--black);
+  transform: translate(4px, 4px);
+  box-shadow: none;
 }
 
 .retro-button:focus-visible {
@@ -702,18 +702,26 @@
 }
 
 .retro-icon-button:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 var(--black);
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--black);
 }
 
 .retro-icon-button:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 var(--black);
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
 
 .retro-icon-button:focus-visible {
   outline: 3px solid var(--purple);
   outline-offset: 3px;
+}
+
+.retro-icon-button:disabled {
+  background: var(--gray);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 1px 1px 0 var(--text-muted);
 }
 
 .directory-card {
