@@ -635,13 +635,13 @@
 }
 
 .retro-button:hover:not(:disabled) {
-  box-shadow: 2px 2px 0 var(--black);
-  transform: translate(2px, 2px);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--black);
 }
 
 .retro-button:active:not(:disabled) {
-  box-shadow: none;
-  transform: translate(4px, 4px);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--black);
 }
 
 .retro-button:focus-visible {
@@ -653,7 +653,8 @@
   background: var(--gray);
   color: var(--text-muted);
   cursor: not-allowed;
-  box-shadow: var(--shadow-small);
+  transform: none;
+  box-shadow: 2px 2px 0 var(--text-muted);
 }
 
 .retro-button--primary {
@@ -701,13 +702,13 @@
 }
 
 .retro-icon-button:hover {
-  box-shadow: 1px 1px 0 var(--black);
-  transform: translate(2px, 2px);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--black);
 }
 
 .retro-icon-button:active {
-  box-shadow: none;
-  transform: translate(3px, 3px);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--black);
 }
 
 .retro-icon-button:focus-visible {
