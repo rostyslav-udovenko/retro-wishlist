@@ -21,17 +21,19 @@ function GiftMedia({ image, giftName }: GiftMediaProps) {
 
   if (isRemoteImage && !hasImageError) {
     return (
-      <img
-        className="gift-card__image"
-        src={image}
-        alt={giftName}
-        loading="lazy"
-        decoding="async"
-        referrerPolicy="no-referrer"
-        onError={() => {
-          setFailedImage(image);
-        }}
-      />
+      <span className="gift-card__icon">
+        <img
+          className="gift-card__image"
+          src={image}
+          alt={giftName}
+          loading="lazy"
+          decoding="async"
+          referrerPolicy="no-referrer"
+          onError={() => {
+            setFailedImage(image);
+          }}
+        />
+      </span>
     );
   }
 
