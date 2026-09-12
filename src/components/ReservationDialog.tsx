@@ -9,6 +9,8 @@ import {
 
 import type { Gift } from "../types/gift";
 
+import GiftMedia from "./GiftMedia";
+
 type ReservationDialogProps = {
   gift: Gift;
   isSubmitting: boolean;
@@ -167,9 +169,13 @@ function ReservationDialog({
           <div
             className={`reservation-dialog__gift reservation-dialog__gift--${gift.accent}`}
           >
-            <span className="reservation-dialog__gift-icon" aria-hidden="true">
-              {gift.image}
-            </span>
+            <GiftMedia
+              image={gift.image}
+              giftName={gift.name}
+              iconClassName="reservation-dialog__gift-icon"
+              imageClassName="reservation-dialog__gift-image"
+              decorative
+            />
 
             <div>
               <p>Selected gift</p>
