@@ -68,7 +68,7 @@ function WishlistDirectoryCard({
         </dl>
 
         <Link
-          className="directory-card__link"
+          className="retro-button directory-card__link"
           to={`/w/${wishlist.slug}`}
           onFocus={prefetchWishlist}
         >

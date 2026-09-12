@@ -149,7 +149,7 @@ function ReservationDialog({
           </div>
 
           <button
-            className="reservation-dialog__close"
+            className="retro-icon-button"
             type="button"
             aria-label="Close reservation dialog"
             disabled={isSubmitting}
@@ -236,7 +236,7 @@ function ReservationDialog({
 
           <div className="reservation-dialog__actions">
             <button
-              className="reservation-dialog__submit"
+              className="retro-button retro-button--mint"
               type="submit"
               disabled={isSubmitting}
             >
@@ -245,7 +245,7 @@ function ReservationDialog({
 
             <button
               ref={cancelButtonRef}
-              className="reservation-dialog__cancel"
+              className="retro-button retro-button--secondary"
               type="button"
               disabled={isSubmitting}
               onClick={onCancel}

@@ -95,7 +95,6 @@
   place-items: center;
   border: 3px solid var(--black);
   background: var(--white);
-  box-shadow: 3px 3px 0 var(--black);
 }
 
 .window-controls {
@@ -438,7 +437,7 @@
   border-left: 3px solid var(--black);
 }
 .statistics dt {
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -498,8 +497,8 @@
 .gift-card {
   --gift-accent: var(--blue);
   display: grid;
-  grid-template-columns: minmax(130px, 0.38fr) minmax(0, 1fr);
-  min-height: 280px;
+  grid-template-columns: minmax(140px, 0.36fr) minmax(0, 1fr);
+  min-height: 300px;
   overflow: hidden;
   border: 4px solid var(--black);
   background: var(--white);
@@ -561,7 +560,7 @@
 .gift-card__status {
   padding: 0.35rem 0.55rem;
   border: 3px solid var(--black);
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -576,8 +575,8 @@
   background: var(--yellow);
 }
 .gift-card__number {
-  color: rgb(17 17 17 / 55%);
-  font-family: "Courier New", Courier, monospace;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 900;
 }
@@ -602,7 +601,7 @@
   margin-top: auto;
 }
 .gift-card__price {
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.76rem;
   font-weight: 900;
 }
@@ -611,8 +610,7 @@
   gap: 0.75rem;
 }
 
-.retro-button,
-.gift-card__product-link {
+.retro-button {
   display: inline-flex;
   min-height: 2.8rem;
   align-items: center;
@@ -620,55 +618,120 @@
   padding: 0.65rem 0.85rem;
   border: 3px solid var(--black);
   border-radius: 0;
-  box-shadow: 4px 4px 0 var(--black);
+  box-shadow: var(--shadow-button);
+  background: var(--gift-accent);
   color: var(--black);
-  font-family: "Courier New", Courier, monospace;
-  font-size: 0.73rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   font-weight: 900;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+  cursor: pointer;
   transition:
     box-shadow 120ms ease,
     transform 120ms ease;
 }
-.retro-button {
-  background: var(--gift-accent);
-  cursor: pointer;
+
+.retro-button:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--black);
 }
+
+.retro-button:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.retro-button:focus-visible {
+  outline: 3px solid var(--purple);
+  outline-offset: 3px;
+}
+
+.retro-button:disabled {
+  background: var(--gray);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 2px 2px 0 var(--text-muted);
+}
+
+.retro-button--primary {
+  background: var(--gift-accent);
+}
+
+.retro-button--secondary {
+  background: var(--white);
+}
+
 .retro-button--release {
   background: var(--yellow);
 }
-.gift-card__product-link {
-  background: var(--white);
+
+.retro-button--danger {
+  background: var(--pink);
 }
-.retro-button:hover:not(:disabled),
-.gift-card__product-link:hover {
+
+.retro-button--mint {
+  background: var(--mint);
+}
+
+.retro-button--yellow {
+  background: var(--yellow);
+}
+
+.retro-button--full {
+  width: 100%;
+}
+
+.retro-icon-button {
+  display: grid;
+  width: 2rem;
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 0;
+  border: 3px solid var(--black);
+  border-radius: 0;
+  background: var(--pink);
+  box-shadow: var(--shadow-small);
+  color: var(--black);
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    box-shadow 120ms ease,
+    transform 120ms ease;
+}
+
+.retro-icon-button:hover {
+  transform: translate(1px, 1px);
   box-shadow: 2px 2px 0 var(--black);
+}
+
+.retro-icon-button:active {
   transform: translate(2px, 2px);
-}
-.retro-button:active:not(:disabled),
-.gift-card__product-link:active {
   box-shadow: none;
-  transform: translate(4px, 4px);
 }
-.retro-button:focus-visible,
-.gift-card__product-link:focus-visible {
-  outline: 4px solid var(--purple);
-  outline-offset: 4px;
+
+.retro-icon-button:focus-visible {
+  outline: 3px solid var(--purple);
+  outline-offset: 3px;
 }
-.retro-button:disabled {
+
+.retro-icon-button:disabled {
   background: var(--gray);
-  color: rgb(17 17 17 / 55%);
+  color: var(--text-muted);
   cursor: not-allowed;
-  box-shadow: 3px 3px 0 rgb(17 17 17 / 55%);
+  transform: none;
+  box-shadow: 1px 1px 0 var(--text-muted);
 }
 
 .directory-card {
   --directory-accent: var(--blue);
   display: grid;
-  grid-template-columns: minmax(130px, 0.35fr) minmax(0, 1fr);
-  min-height: 350px;
+  grid-template-columns: minmax(140px, 0.36fr) minmax(0, 1fr);
+  min-height: 300px;
   overflow: hidden;
   border: 4px solid var(--black);
   background: var(--white);
@@ -716,7 +779,7 @@
 }
 .directory-card__header p {
   margin: 0 0 0.35rem;
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -730,8 +793,8 @@
   text-transform: uppercase;
 }
 .directory-card__number {
-  color: rgb(17 17 17 / 55%);
-  font-family: "Courier New", Courier, monospace;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 900;
 }
@@ -760,15 +823,16 @@
   border-left: 3px solid var(--black);
 }
 .directory-card__statistics dt {
-  font-family: "Courier New", Courier, monospace;
-  font-size: 0.58rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
   font-weight: 900;
   text-transform: uppercase;
 }
 .directory-card__statistics dd {
   margin: 0.2rem 0 0;
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   font-weight: 1000;
+  line-height: 1;
 }
 .directory-card__statistics div:nth-child(2) {
   background: var(--mint);
@@ -777,37 +841,7 @@
   background: var(--gray);
 }
 .directory-card__link {
-  display: inline-flex;
-  min-height: 3rem;
-  align-items: center;
-  justify-content: center;
-  padding: 0.7rem 1rem;
-  border: 3px solid var(--black);
   background: var(--directory-accent);
-  box-shadow: 5px 5px 0 var(--black);
-  color: var(--black);
-  font-family: "Courier New", Courier, monospace;
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-align: center;
-  text-decoration: none;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition:
-    box-shadow 120ms ease,
-    transform 120ms ease;
-}
-.directory-card__link:hover {
-  box-shadow: 2px 2px 0 var(--black);
-  transform: translate(3px, 3px);
-}
-.directory-card__link:active {
-  box-shadow: none;
-  transform: translate(5px, 5px);
-}
-.directory-card__link:focus-visible {
-  outline: 4px solid var(--purple);
-  outline-offset: 4px;
 }
 
 .directory-hero__primary-icon {
@@ -929,25 +963,8 @@
   line-height: 1.5;
 }
 .page-state__button,
-.page-state__link,
-.inline-error button {
-  display: inline-flex;
-  min-height: 2.8rem;
-  align-items: center;
-  justify-content: center;
+.page-state__link {
   margin-top: 1.5rem;
-  padding: 0.65rem 1rem;
-  border: 3px solid var(--black);
-  border-radius: 0;
-  background: var(--yellow);
-  box-shadow: 4px 4px 0 var(--black);
-  color: var(--black);
-  font-family: "Courier New", Courier, monospace;
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-decoration: none;
-  text-transform: uppercase;
-  cursor: pointer;
 }
 .inline-error {
   display: flex;
@@ -966,10 +983,9 @@
   flex-direction: column;
   gap: 0.25rem;
 }
-.inline-error button {
+.inline-error .retro-button {
   flex-shrink: 0;
   margin-top: 0;
-  background: var(--white);
 }
 .empty-state {
   display: flex;
@@ -1046,21 +1062,7 @@
   place-items: center;
   border: 3px solid var(--black);
   background: var(--white);
-  box-shadow: 3px 3px 0 var(--black);
-}
-.reservation-dialog__close {
-  display: grid;
-  width: 2rem;
-  aspect-ratio: 1;
-  place-items: center;
-  padding: 0;
-  border: 3px solid var(--black);
-  border-radius: 0;
-  background: var(--pink);
-  box-shadow: 3px 3px 0 var(--black);
-  font-size: 1.4rem;
-  font-weight: 900;
-  cursor: pointer;
+  box-shadow: var(--shadow-small);
 }
 .reservation-dialog__form {
   display: grid;
@@ -1168,24 +1170,10 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.9rem;
 }
-.reservation-dialog__submit,
-.reservation-dialog__cancel {
-  min-height: 3rem;
-  padding: 0.7rem 1rem;
-  border: 3px solid var(--black);
-  border-radius: 0;
-  box-shadow: 5px 5px 0 var(--black);
-  font-family: "Courier New", Courier, monospace;
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-.reservation-dialog__submit {
-  background: var(--mint);
-}
-.reservation-dialog__cancel {
-  background: var(--white);
+.reservation-dialog__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.9rem;
 }
 .reservation-dialog__privacy {
   margin: 0;
@@ -1314,8 +1302,7 @@
     align-items: stretch;
   }
   .gift-card__actions,
-  .retro-button,
-  .gift-card__product-link {
+  .retro-button {
     width: 100%;
   }
   .directory-card__statistics {
@@ -1347,7 +1334,7 @@
     align-items: stretch;
     flex-direction: column;
   }
-  .inline-error button {
+  .inline-error .retro-button {
     width: 100%;
   }
   .dialog-backdrop {
@@ -1451,32 +1438,6 @@
   place-items: center;
   border: 3px solid var(--black);
   background: var(--white);
-  box-shadow: 3px 3px 0 var(--black);
-}
-
-.about-dialog__close {
-  display: grid;
-  width: 2rem;
-  aspect-ratio: 1;
-  place-items: center;
-  padding: 0;
-  border: 3px solid var(--black);
-  border-radius: 0;
-  background: var(--pink);
-  box-shadow: 3px 3px 0 var(--black);
-  font-size: 1.4rem;
-  font-weight: 900;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.about-dialog__close:hover {
-  box-shadow: 1px 1px 0 var(--black);
-  transform: translate(2px, 2px);
-}
-.about-dialog__close:focus-visible {
-  outline: 4px solid var(--purple);
-  outline-offset: 3px;
 }
 
 .about-dialog__content {
@@ -1570,40 +1531,11 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.9rem;
 }
-.about-dialog__links a,
-.about-dialog__footer button {
-  display: inline-flex;
-  min-height: 3rem;
-  align-items: center;
-  justify-content: center;
-  padding: 0.7rem 1rem;
-  border: 3px solid var(--black);
-  border-radius: 0;
-  box-shadow: 5px 5px 0 var(--black);
-  color: var(--black);
-  font-family: "Courier New", Courier, monospace;
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-align: center;
-  text-decoration: none;
-  text-transform: uppercase;
-  cursor: pointer;
-}
 .about-dialog__links a:first-child {
   background: var(--cyan);
 }
 .about-dialog__links a:last-child {
   background: var(--hot-pink);
-}
-.about-dialog__links a:hover,
-.about-dialog__footer button:hover {
-  box-shadow: 2px 2px 0 var(--black);
-  transform: translate(3px, 3px);
-}
-.about-dialog__links a:focus-visible,
-.about-dialog__footer button:focus-visible {
-  outline: 4px solid var(--purple);
-  outline-offset: 4px;
 }
 .about-dialog__footer {
   display: flex;
@@ -1614,14 +1546,10 @@
   border-top: 3px dashed var(--black);
 }
 .about-dialog__footer > span {
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 900;
   text-transform: uppercase;
-}
-.about-dialog__footer button {
-  flex-shrink: 0;
-  background: var(--mint);
 }
 
 @media (max-width: 620px) {
@@ -1655,7 +1583,7 @@
     align-items: stretch;
     flex-direction: column;
   }
-  .about-dialog__footer button {
+  .about-dialog__footer .retro-button {
     width: 100%;
   }
 }

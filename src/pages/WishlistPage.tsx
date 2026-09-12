@@ -316,7 +316,7 @@ function WishlistPage() {
         <h1>Wishlist unavailable</h1>
         <p>{error}</p>
         <button
-          className="page-state__button"
+          className="retro-button retro-button--yellow page-state__button"
           type="button"
           onClick={() => void reloadWishlist()}
         >
@@ -381,7 +381,11 @@ function WishlistPage() {
                 <strong>Refresh failed</strong>
                 <span>{error}</span>
               </div>
-              <button type="button" onClick={() => void reloadWishlist()}>
+              <button
+                className="retro-button retro-button--secondary"
+                type="button"
+                onClick={() => void reloadWishlist()}
+              >
                 Retry
               </button>
             </div>

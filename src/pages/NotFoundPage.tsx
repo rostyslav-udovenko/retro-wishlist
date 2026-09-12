@@ -17,7 +17,10 @@ function NotFoundPage() {
 
         <p>The requested page does not exist.</p>
 
-        <Link className="page-state__button page-state__link" to="/">
+        <Link
+          className="retro-button retro-button--yellow page-state__button page-state__link"
+          to="/"
+        >
           Return home
         </Link>
       </section>
