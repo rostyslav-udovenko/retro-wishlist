@@ -676,6 +676,10 @@
   background: var(--mint);
 }
 
+.retro-button--yellow {
+  background: var(--yellow);
+}
+
 .retro-button--full {
   width: 100%;
 }
