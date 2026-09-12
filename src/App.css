@@ -1095,10 +1095,17 @@
   width: 5rem;
   aspect-ratio: 1;
   place-items: center;
+  overflow: hidden;
   border: 4px solid var(--black);
   background: var(--white);
   box-shadow: 5px 5px 0 var(--black);
   font-size: 2.6rem;
+}
+.reservation-dialog__gift-icon .reservation-dialog__gift-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .reservation-dialog__gift p {
   margin: 0 0 0.25rem;

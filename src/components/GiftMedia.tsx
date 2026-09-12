@@ -3,6 +3,9 @@ import { useState } from "react";
 type GiftMediaProps = {
   image: string;
   giftName: string;
+  iconClassName?: string;
+  imageClassName?: string;
+  decorative?: boolean;
 };
 
 function isImageUrl(value: string): boolean {
@@ -13,7 +16,13 @@ function isImageUrl(value: string): boolean {
   }
 }
 
-function GiftMedia({ image, giftName }: GiftMediaProps) {
+function GiftMedia({
+  image,
+  giftName,
+  iconClassName = "gift-card__icon",
+  imageClassName = "gift-card__image",
+  decorative = false,
+}: GiftMediaProps) {
   const [failedImage, setFailedImage] = useState<string | null>(null);
 
   const isRemoteImage = isImageUrl(image);
@@ -21,11 +30,11 @@ function GiftMedia({ image, giftName }: GiftMediaProps) {
 
   if (isRemoteImage && !hasImageError) {
     return (
-      <span className="gift-card__icon">
+      <span className={iconClassName} aria-hidden={decorative || undefined}>
         <img
-          className="gift-card__image"
+          className={imageClassName}
           src={image}
-          alt={giftName}
+          alt={decorative ? "" : giftName}
           loading="lazy"
           decoding="async"
           referrerPolicy="no-referrer"
@@ -40,9 +49,12 @@ function GiftMedia({ image, giftName }: GiftMediaProps) {
   if (hasImageError) {
     return (
       <span
-        className="gift-card__icon"
-        role="img"
-        aria-label={`Image unavailable for ${giftName}`}
+        className={iconClassName}
+        role={decorative ? undefined : "img"}
+        aria-label={
+          decorative ? undefined : `Image unavailable for ${giftName}`
+        }
+        aria-hidden={decorative || undefined}
       >
         🎁
       </span>
@@ -50,7 +62,7 @@ function GiftMedia({ image, giftName }: GiftMediaProps) {
   }
 
   return (
-    <span className="gift-card__icon" aria-hidden="true">
+    <span className={iconClassName} aria-hidden="true">
       {image}
     </span>
   );
