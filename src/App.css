@@ -1294,6 +1294,10 @@
     border-right: 0;
     border-bottom: 4px solid var(--black);
   }
+  .gift-card__icon {
+    width: clamp(7rem, 32vw, 11rem);
+    font-size: clamp(3.5rem, 12vw, 5rem);
+  }
   .gift-card__footer {
     grid-template-columns: 1fr;
     align-items: stretch;
