@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { Link } from "react-router";
-
 import { prefetchWishlistPage } from "../services/wishlists";
 import type { WishlistDirectoryItem } from "../types/wishlist-directory";
 
@@ -36,18 +35,10 @@ function WishlistDirectoryCard({
       </div>
 
       <div className="directory-card__content">
-        <div className="directory-card__header">
-          <div>
-            <p>Public wishlist</p>
-            <h2 id={`directory-title-${wishlist.slug}`}>
-              {wishlist.ownerName}
-            </h2>
-          </div>
-
-          <span className="directory-card__number">
-            #{String(position + 1).padStart(2, "0")}
-          </span>
-        </div>
+        <header className="directory-card__header">
+          <p>Public wishlist</p>
+          <h2 id={`directory-title-${wishlist.slug}`}>{wishlist.ownerName}</h2>
+        </header>
 
         <h3>{wishlist.title}</h3>
         <p className="directory-card__description">{wishlist.description}</p>

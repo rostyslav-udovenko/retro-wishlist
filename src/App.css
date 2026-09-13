@@ -762,8 +762,9 @@
 .directory-card {
   --directory-accent: var(--blue);
   display: grid;
-  grid-template-columns: minmax(140px, 0.36fr) minmax(0, 1fr);
-  min-height: 300px;
+  grid-template-columns: 1fr;
+  grid-template-rows: clamp(260px, 32vw, 360px) 1fr;
+  min-height: 100%;
   overflow: hidden;
   border: 4px solid var(--black);
   background: var(--white);
@@ -780,8 +781,10 @@
 }
 .directory-card__visual {
   display: grid;
+  min-height: 0;
   place-items: center;
-  border-right: 4px solid var(--black);
+  overflow: hidden;
+  border-bottom: 4px solid var(--black);
   background:
     radial-gradient(var(--black) 1.5px, transparent 1.5px),
     var(--directory-accent);
@@ -789,31 +792,31 @@
 }
 .directory-card__visual > span {
   display: grid;
-  width: 7rem;
+  width: min(calc(100% - 2rem), 18rem);
   aspect-ratio: 1;
   place-items: center;
   border: 4px solid var(--black);
   background: var(--white);
   box-shadow: 7px 7px 0 var(--black);
-  font-size: 4rem;
+  font-size: clamp(4.5rem, 12vw, 7rem);
   transform: rotate(-4deg);
 }
 .directory-card__content {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  padding: 1.25rem;
-}
-.directory-card__header {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
+  padding: 1.2rem;
 }
 .directory-card__header p {
-  margin: 0 0 0.35rem;
+  display: inline-flex;
+  margin: 0 0 0.55rem;
+  padding: 0.3rem 0.5rem;
+  border: 2px solid var(--black);
+  background: var(--directory-accent);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 900;
+  line-height: 1;
   text-transform: uppercase;
 }
 .directory-card__header h2 {
@@ -824,16 +827,11 @@
   line-height: 0.95;
   text-transform: uppercase;
 }
-.directory-card__number {
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 900;
-}
 .directory-card__content > h3 {
   margin: 1rem 0 0;
   font-size: 1rem;
   font-weight: 900;
+  line-height: 1.25;
   text-transform: uppercase;
 }
 .directory-card__description {
@@ -849,6 +847,7 @@
 }
 .directory-card__statistics div {
   padding: 0.6rem 0.35rem;
+  background: var(--white);
   text-align: center;
 }
 .directory-card__statistics div + div {
@@ -873,9 +872,9 @@
   background: var(--gray);
 }
 .directory-card__link {
+  width: 100%;
   background: var(--directory-accent);
 }
-
 .directory-hero__primary-icon {
   display: grid;
   width: clamp(8rem, 15vw, 12rem);
@@ -1322,22 +1321,17 @@
     align-items: start;
     flex-direction: column;
   }
+  .gift-card,
   .directory-card {
-    grid-template-columns: 1fr;
-  }
-  .gift-card {
     grid-template-rows: clamp(270px, 82vw, 320px) auto;
   }
+  .gift-card__visual,
   .directory-card__visual {
-    min-height: 190px;
-    border-right: 0;
-    border-bottom: 4px solid var(--black);
-  }
-  .gift-card__visual {
     min-height: 0;
     padding: 0.75rem;
   }
-  .gift-card__icon {
+  .gift-card__icon,
+  .directory-card__visual > span {
     width: min(calc(100% - 1rem), 15rem);
     font-size: clamp(4rem, 18vw, 6rem);
   }
@@ -1352,20 +1346,6 @@
   }
   .retro-button {
     width: 100%;
-  }
-  .directory-card__statistics {
-    grid-template-columns: 1fr;
-  }
-  .directory-card__statistics div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.65rem 0.75rem;
-    text-align: left;
-  }
-  .directory-card__statistics div + div {
-    border-top: 3px solid var(--black);
-    border-left: 0;
   }
   .window-footer {
     align-items: flex-start;
