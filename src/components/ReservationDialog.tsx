@@ -6,9 +6,7 @@ import {
   type FormEvent,
   type MouseEvent,
 } from "react";
-
 import type { Gift } from "../types/gift";
-
 import GiftMedia from "./GiftMedia";
 
 type ReservationDialogProps = {
@@ -46,13 +44,11 @@ function ReservationDialog({
 }: ReservationDialogProps) {
   const [guestName, setGuestName] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
-
   const titleId = useId();
   const descriptionId = useId();
   const inputId = useId();
   const inputErrorId = useId();
   const submitErrorId = useId();
-
   const inputRef = useRef<HTMLInputElement>(null);
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -110,7 +106,6 @@ function ReservationDialog({
 
     const normalizedName = normalizeGuestName(guestName);
     const nextValidationError = validateGuestName(normalizedName);
-
     setValidationError(nextValidationError);
 
     if (nextValidationError) {
@@ -149,7 +144,6 @@ function ReservationDialog({
             <span aria-hidden="true">🎁</span>
             <strong>RESERVE_GIFT.EXE</strong>
           </div>
-
           <button
             className="retro-icon-button"
             type="button"
@@ -176,7 +170,6 @@ function ReservationDialog({
               imageClassName="reservation-dialog__gift-image"
               decorative
             />
-
             <div>
               <p>Selected gift</p>
               <h2 id={titleId}>{gift.name}</h2>
@@ -185,13 +178,12 @@ function ReservationDialog({
           </div>
 
           <p className="reservation-dialog__description" id={descriptionId}>
-            Enter your name to reserve this gift. Other visitors will only see
-            that the gift has already been chosen.
+            Enter your name to reserve this gift. Your name stays private, and
+            other visitors will only see that the gift is reserved.
           </p>
 
           <div className="reservation-dialog__field">
             <label htmlFor={inputId}>Your name</label>
-
             <input
               ref={inputRef}
               id={inputId}
@@ -206,18 +198,15 @@ function ReservationDialog({
               aria-describedby={validationError ? inputErrorId : undefined}
               onChange={(event) => {
                 setGuestName(event.target.value);
-
                 if (validationError) {
                   setValidationError(null);
                 }
               }}
               placeholder="Enter your name"
             />
-
             <span className="reservation-dialog__counter">
               {guestName.length}/50
             </span>
-
             {validationError ? (
               <p
                 className="reservation-dialog__error"
@@ -248,7 +237,6 @@ function ReservationDialog({
             >
               {isSubmitting ? "Reserving..." : "Confirm reservation"}
             </button>
-
             <button
               ref={cancelButtonRef}
               className="retro-button retro-button--secondary"
@@ -259,10 +247,6 @@ function ReservationDialog({
               Cancel
             </button>
           </div>
-
-          <p className="reservation-dialog__privacy">
-            Your name is stored privately and is not shown to other visitors.
-          </p>
         </form>
       </section>
     </div>
