@@ -1213,16 +1213,6 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.9rem;
 }
-.reservation-dialog__privacy {
-  margin: 0;
-  padding-top: 0.9rem;
-  border-top: 3px dashed var(--black);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-align: center;
-  text-transform: uppercase;
-}
 
 .visually-hidden {
   position: absolute;
