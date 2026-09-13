@@ -1,3 +1,19 @@
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("./assets/fonts/IBMPlexMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("./assets/fonts/IBMPlexMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -5,8 +21,12 @@
   -moz-osx-font-smoothing: grayscale;
 
   /* typography */
-  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "Courier New", Courier, monospace;
+  --font-sans:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+  --font-mono:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
 
   /* palette */
   --black: #111111;
