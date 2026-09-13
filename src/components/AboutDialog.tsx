@@ -173,17 +173,8 @@ function AboutDialog({ onClose }: AboutDialogProps) {
               <span className="visually-hidden">, opens in a new tab</span>
             </a>
           </div>
-
           <footer className="about-dialog__footer">
             <span>Made with ♥ and too many colors</span>
-
-            <button
-              className="retro-button retro-button--mint"
-              type="button"
-              onClick={onClose}
-            >
-              Close
-            </button>
           </footer>
         </div>
       </section>
