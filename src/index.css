@@ -1,6 +1,8 @@
 @font-face {
   font-family: "IBM Plex Mono";
-  src: url("./assets/fonts/IBMPlexMono-Regular.woff2") format("woff2");
+  src:
+    url("./assets/fonts/IBMPlexMono-Regular.woff2") format("woff2"),
+    url("./assets/fonts/IBMPlexMono-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -8,21 +10,18 @@
 
 @font-face {
   font-family: "IBM Plex Mono";
-  src: url("./assets/fonts/IBMPlexMono-SemiBold.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IBM Plex Mono";
-  src: url("./assets/fonts/IBMPlexMono-Bold.woff2") format("woff2");
-  font-weight: 700;
+  src:
+    url("./assets/fonts/IBMPlexMono-Bold.woff2") format("woff2"),
+    url("./assets/fonts/IBMPlexMono-Bold.woff") format("woff");
+  font-weight: 500 1000;
   font-style: normal;
   font-display: swap;
 }
 
 :root {
+  font-family:
+    "IBM Plex Mono", Geneva, Chicago, "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -30,11 +29,11 @@
 
   /* typography */
   --font-sans:
-    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    monospace;
+    "IBM Plex Mono", Geneva, Chicago, "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
   --font-mono:
-    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    monospace;
+    "IBM Plex Mono", Geneva, Chicago, "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
 
   /* palette */
   --black: #111111;
@@ -89,14 +88,9 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: inherit;
   color: var(--black);
   background: var(--purple);
-}
-
-body,
-button {
-  font-family: inherit;
 }
 
 button,
