@@ -11,13 +11,15 @@ import type { WishlistDirectoryItem } from "../types/wishlist-directory";
 
 type DirectoryState = {
   wishlists: WishlistDirectoryItem[];
-  isLoading: boolean;
+  isInitialLoading: boolean;
+  isRefreshing: boolean;
   error: string | null;
 };
 
 const initialDirectoryState: DirectoryState = {
   wishlists: [],
-  isLoading: true,
+  isInitialLoading: true,
+  isRefreshing: false,
   error: null,
 };
 
@@ -34,7 +36,8 @@ function HomePage() {
     return cachedWishlists
       ? {
           wishlists: cachedWishlists,
-          isLoading: true,
+          isInitialLoading: false,
+          isRefreshing: true,
           error: null,
         }
       : initialDirectoryState;
@@ -53,7 +56,8 @@ function HomePage() {
         setCachedWishlistDirectory(wishlists);
         setDirectoryState({
           wishlists,
-          isLoading: false,
+          isInitialLoading: false,
+          isRefreshing: false,
           error: null,
         });
       } catch (error) {
@@ -61,7 +65,8 @@ function HomePage() {
 
         setDirectoryState((currentState) => ({
           wishlists: currentState.wishlists,
-          isLoading: false,
+          isInitialLoading: false,
+          isRefreshing: false,
           error: getErrorMessage(error),
         }));
       }
@@ -77,7 +82,8 @@ function HomePage() {
   async function retryDirectoryLoad() {
     setDirectoryState((currentState) => ({
       ...currentState,
-      isLoading: true,
+      isInitialLoading: currentState.wishlists.length === 0,
+      isRefreshing: currentState.wishlists.length > 0,
       error: null,
     }));
 
@@ -86,21 +92,23 @@ function HomePage() {
       setCachedWishlistDirectory(wishlists);
       setDirectoryState({
         wishlists,
-        isLoading: false,
+        isInitialLoading: false,
+        isRefreshing: false,
         error: null,
       });
     } catch (error) {
       setDirectoryState((currentState) => ({
         wishlists: currentState.wishlists,
-        isLoading: false,
+        isInitialLoading: false,
+        isRefreshing: false,
         error: getErrorMessage(error),
       }));
     }
   }
 
-  const { wishlists, isLoading, error } = directoryState;
+  const { wishlists, isInitialLoading, isRefreshing, error } = directoryState;
 
-  if (isLoading && wishlists.length === 0) {
+  if (isInitialLoading && wishlists.length === 0) {
     return (
       <main className="desktop">
         <div className="desktop__decoration desktop__decoration--circle" />
@@ -184,7 +192,7 @@ function HomePage() {
             Help
           </button>
           <span className="menu-bar__status">
-            {isLoading ? "SYNCING" : "ONLINE"}
+            {isRefreshing ? "SYNCING" : "ONLINE"}
           </span>
         </nav>
 
