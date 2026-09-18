@@ -29,14 +29,16 @@ import {
 type PageState = {
   wishlist: Wishlist | null;
   gifts: Gift[];
-  isLoading: boolean;
+  isInitialLoading: boolean;
+  isRefreshing: boolean;
   error: string | null;
 };
 
 const initialPageState: PageState = {
   wishlist: null,
   gifts: [],
-  isLoading: true,
+  isInitialLoading: true,
+  isRefreshing: false,
   error: null,
 };
 
@@ -60,7 +62,8 @@ function WishlistPage() {
     return {
       wishlist: cachedResult.wishlist,
       gifts: cachedResult.gifts,
-      isLoading: true,
+      isInitialLoading: false,
+      isRefreshing: true,
       error: null,
     };
   });
@@ -85,7 +88,8 @@ function WishlistPage() {
       setPageState({
         wishlist: result.wishlist,
         gifts: result.gifts,
-        isLoading: false,
+        isInitialLoading: false,
+        isRefreshing: false,
         error: null,
       });
     },
@@ -97,7 +101,8 @@ function WishlistPage() {
 
     setPageState((currentState) => ({
       ...currentState,
-      isLoading: true,
+      isInitialLoading: currentState.wishlist === null,
+      isRefreshing: currentState.wishlist !== null,
       error: null,
     }));
 
@@ -106,7 +111,8 @@ function WishlistPage() {
     } catch (error) {
       setPageState((currentState) => ({
         ...currentState,
-        isLoading: false,
+        isInitialLoading: false,
+        isRefreshing: false,
         error: getErrorMessage(error),
       }));
     }
@@ -129,7 +135,8 @@ function WishlistPage() {
       setPageState({
         wishlist: cachedResult.wishlist,
         gifts: cachedResult.gifts,
-        isLoading: true,
+        isInitialLoading: false,
+        isRefreshing: true,
         error: null,
       });
     } else {
@@ -150,7 +157,8 @@ function WishlistPage() {
         setPageState((currentState) => ({
           wishlist: currentState.wishlist,
           gifts: currentState.gifts,
-          isLoading: false,
+          isInitialLoading: false,
+          isRefreshing: false,
           error: getErrorMessage(error),
         }));
       }
@@ -285,13 +293,13 @@ function WishlistPage() {
     }
   }
 
-  const { wishlist, gifts, isLoading, error } = pageState;
+  const { wishlist, gifts, isInitialLoading, isRefreshing, error } = pageState;
   const availableCount = gifts.filter((gift) => !gift.isReserved).length;
   const isCurrentWishlist = wishlist?.slug === wishlistSlug;
 
   let pageContent;
 
-  if ((isLoading && !wishlist) || (wishlist && !isCurrentWishlist)) {
+  if ((isInitialLoading && !wishlist) || (wishlist && !isCurrentWishlist)) {
     pageContent = (
       <section
         className="page-state page-state--loading"
@@ -370,7 +378,7 @@ function WishlistPage() {
             Help
           </button>
           <span className="menu-bar__status">
-            {isLoading ? "SYNCING" : "ONLINE"}
+            {isRefreshing ? "SYNCING" : "ONLINE"}
           </span>
         </nav>
 
