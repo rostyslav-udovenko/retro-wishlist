@@ -81,7 +81,9 @@ export async function loadWishlistPageDeduplicated(
       return result;
     })
     .finally(() => {
-      pendingRequests.delete(key);
+      if (pendingRequests.get(key) === request) {
+        pendingRequests.delete(key);
+      }
     });
 
   pendingRequests.set(key, request);

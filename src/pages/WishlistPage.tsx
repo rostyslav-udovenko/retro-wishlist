@@ -190,16 +190,10 @@ function WishlistPage() {
     (giftId: number, isReserved: boolean) => {
       updateCachedGiftReservation(wishlistSlug, giftId, isReserved);
       updateCachedDirectoryReservation(wishlistSlug, isReserved);
-
       setPageState((currentState) => ({
         ...currentState,
         gifts: currentState.gifts.map((gift) =>
-          gift.id === giftId
-            ? {
-                ...gift,
-                isReserved,
-              }
-            : gift,
+          gift.id === giftId ? { ...gift, isReserved } : gift,
         ),
       }));
     },
@@ -246,7 +240,6 @@ function WishlistPage() {
       updateGiftReservationLocally(giftId, true);
       setSelectedGift(null);
       notifyWishlistChanged();
-      void reloadWishlist();
     } catch (error) {
       setReservationError(getErrorMessage(error));
     } finally {
@@ -282,7 +275,6 @@ function WishlistPage() {
       setReservationIds(removeReservationOwnership(wishlistSlug, giftId));
       updateGiftReservationLocally(giftId, false);
       notifyWishlistChanged();
-      void reloadWishlist();
     } catch (error) {
       setPageState((currentState) => ({
         ...currentState,

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
 import type { RealtimeChannel } from "@supabase/supabase-js";
-
 import {
   broadcastWishlistChange,
   createWishlistChannel,
@@ -58,7 +57,7 @@ export function useWishlistSync({
     }
 
     let isDisposed = false;
-
+    let hasSubscribedOnce = false;
     const channel = createWishlistChannel(wishlistSlug, () => {
       void refreshWishlist();
     });
@@ -71,13 +70,13 @@ export function useWishlistSync({
       }
 
       if (status === "SUBSCRIBED") {
-        const wasSubscribed = isSubscribedRef.current;
+        const isReconnect = hasSubscribedOnce;
+        hasSubscribedOnce = true;
         isSubscribedRef.current = true;
 
-        if (!wasSubscribed) {
+        if (isReconnect) {
           void refreshWishlist();
         }
-
         return;
       }
 
