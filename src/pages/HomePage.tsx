@@ -7,6 +7,7 @@ import {
   WindowFooter,
   WindowTitleBar,
 } from "../components/AppShell";
+import AppMenuBar from "../components/AppMenuBar";
 import WishlistDirectoryCard from "../components/WishlistDirectoryCard";
 import { fetchFeaturedWishlists } from "../services/wishlist-directory";
 import {
@@ -161,7 +162,7 @@ function HomePage() {
       <RetroWindow className="directory-window" labelledBy="directory-title">
         <WindowTitleBar icon="🎁" />
 
-        <nav className="menu-bar" aria-label="Application menu">
+        <AppMenuBar isRefreshing={isRefreshing}>
           <a className="menu-bar__link" href="#wishlist-list-title">
             Wishlists
           </a>
@@ -172,10 +173,7 @@ function HomePage() {
           >
             Help
           </button>
-          <span className="menu-bar__status">
-            {isRefreshing ? "SYNCING" : "ONLINE"}
-          </span>
-        </nav>
+        </AppMenuBar>
 
         <div className="wishlist-window__body">
           {error ? (
