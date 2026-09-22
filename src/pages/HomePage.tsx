@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 
 import AboutDialog from "../components/AboutDialog";
+import {
+  AppDesktop,
+  RetroWindow,
+  WindowFooter,
+  WindowTitleBar,
+} from "../components/AppShell";
 import WishlistDirectoryCard from "../components/WishlistDirectoryCard";
 import { fetchFeaturedWishlists } from "../services/wishlist-directory";
 import {
@@ -50,7 +56,6 @@ function HomePage() {
     async function loadDirectory() {
       try {
         const wishlists = await fetchFeaturedWishlists();
-
         if (isCancelled) return;
 
         setCachedWishlistDirectory(wishlists);
@@ -110,10 +115,7 @@ function HomePage() {
 
   if (isInitialLoading && wishlists.length === 0) {
     return (
-      <main className="desktop">
-        <div className="desktop__decoration desktop__decoration--circle" />
-        <div className="desktop__decoration desktop__decoration--triangle" />
-
+      <AppDesktop>
         <section
           className="page-state page-state--loading"
           aria-live="polite"
@@ -128,16 +130,13 @@ function HomePage() {
             Please wait while the public wishlist directory is being prepared.
           </p>
         </section>
-      </main>
+      </AppDesktop>
     );
   }
 
   if (error && wishlists.length === 0) {
     return (
-      <main className="desktop">
-        <div className="desktop__decoration desktop__decoration--circle" />
-        <div className="desktop__decoration desktop__decoration--triangle" />
-
+      <AppDesktop>
         <section className="page-state page-state--error" role="alert">
           <span className="page-state__icon" aria-hidden="true">
             ⚠️
@@ -153,32 +152,14 @@ function HomePage() {
             Try again
           </button>
         </section>
-      </main>
+      </AppDesktop>
     );
   }
 
   return (
-    <main className="desktop">
-      <div className="desktop__decoration desktop__decoration--circle" />
-      <div className="desktop__decoration desktop__decoration--triangle" />
-
-      <section
-        className="wishlist-window directory-window"
-        aria-labelledby="directory-title"
-      >
-        <header className="title-bar">
-          <div className="title-bar__identity">
-            <span className="title-bar__icon" aria-hidden="true">
-              🎁
-            </span>
-            <span>WISHLIST.EXE</span>
-          </div>
-          <div className="window-controls" aria-hidden="true">
-            <span className="window-control window-control--minimize" />
-            <span className="window-control window-control--maximize" />
-            <span className="window-control window-control--close" />
-          </div>
-        </header>
+    <AppDesktop>
+      <RetroWindow className="directory-window" labelledBy="directory-title">
+        <WindowTitleBar icon="🎁" />
 
         <nav className="menu-bar" aria-label="Application menu">
           <a className="menu-bar__link" href="#wishlist-list-title">
@@ -224,7 +205,6 @@ function HomePage() {
                 duplicates or coordinating in a group chat.
               </p>
             </div>
-
             <div className="directory-hero__art" aria-hidden="true">
               <span className="directory-hero__primary-icon">🎂</span>
               <span className="directory-hero__spark directory-hero__spark--one">
@@ -278,16 +258,13 @@ function HomePage() {
           </section>
         </div>
 
-        <footer className="window-footer">
-          <span>Made with ♥ and too many colors</span>
-          <span>Rostyslav Udovenko © 2026</span>
-        </footer>
-      </section>
+        <WindowFooter />
+      </RetroWindow>
 
       {isAboutOpen ? (
         <AboutDialog onClose={() => setIsAboutOpen(false)} />
       ) : null}
-    </main>
+    </AppDesktop>
   );
 }
 
