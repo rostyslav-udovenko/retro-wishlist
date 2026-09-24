@@ -2,6 +2,13 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 
 import AboutDialog from "../components/AboutDialog";
+import AppMenuBar from "../components/AppMenuBar";
+import {
+  AppDesktop,
+  RetroWindow,
+  WindowFooter,
+  WindowTitleBar,
+} from "../components/AppShell";
 import GiftCard from "../components/GiftCard";
 import ReservationDialog from "../components/ReservationDialog";
 import { useWishlistSync } from "../hooks/use-wishlist-sync";
@@ -339,22 +346,9 @@ function WishlistPage() {
     );
   } else {
     pageContent = (
-      <section className="wishlist-window" aria-labelledby="wishlist-title">
-        <header className="title-bar">
-          <div className="title-bar__identity">
-            <span className="title-bar__icon" aria-hidden="true">
-              {wishlist.icon}
-            </span>
-            <span>WISHLIST.EXE</span>
-          </div>
-          <div className="window-controls" aria-hidden="true">
-            <span className="window-control window-control--minimize" />
-            <span className="window-control window-control--maximize" />
-            <span className="window-control window-control--close" />
-          </div>
-        </header>
-
-        <nav className="menu-bar" aria-label="Application menu">
+      <RetroWindow labelledBy="wishlist-title">
+        <WindowTitleBar icon={wishlist.icon} />
+        <AppMenuBar isRefreshing={isRefreshing}>
           <Link className="menu-bar__link" to="/">
             <span aria-hidden="true">←</span>
             All wishlists
@@ -369,10 +363,7 @@ function WishlistPage() {
           >
             Help
           </button>
-          <span className="menu-bar__status">
-            {isRefreshing ? "SYNCING" : "ONLINE"}
-          </span>
-        </nav>
+        </AppMenuBar>
 
         <div className="wishlist-window__body">
           {error ? (
@@ -477,18 +468,13 @@ function WishlistPage() {
           </section>
         </div>
 
-        <footer className="window-footer">
-          <span>Made with ♥ and too many colors</span>
-          <span>Rostyslav Udovenko © 2026</span>
-        </footer>
-      </section>
+        <WindowFooter />
+      </RetroWindow>
     );
   }
 
   return (
-    <main className="desktop">
-      <div className="desktop__decoration desktop__decoration--circle" />
-      <div className="desktop__decoration desktop__decoration--triangle" />
+    <AppDesktop>
       {pageContent}
 
       {selectedGift ? (
@@ -504,7 +490,7 @@ function WishlistPage() {
       {isAboutOpen ? (
         <AboutDialog onClose={() => setIsAboutOpen(false)} />
       ) : null}
-    </main>
+    </AppDesktop>
   );
 }
 
